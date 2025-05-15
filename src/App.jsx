@@ -11,6 +11,7 @@ import Inconveniente from './pages/Inconvenientes/CrudInconvenientes';
 import Chat from './pages/Chatbot/Chatbot';
 import ListRestaurants from './pages/Restaurant/List';
 import ListMenus from './pages/Menu/List';
+import ListDrivers from './pages/Driver/List';
 
 
 
@@ -30,6 +31,7 @@ function AppContent() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/restaurants" element={<ListRestaurants />} />
           <Route path="/menus" element={<ListMenus/>} /> 
+          <Route path="/drivers" element={<ListDrivers/>} /> 
           {/* Agrega más rutas aquí */}
         </Routes>
       </div>

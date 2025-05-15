@@ -1,29 +1,21 @@
 import { Edit, Eye, Trash2, CopyPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { menuService } from "../../services/menuService";
-import { productService } from "../../services/productService";
-import { restaurantService } from "../../services/restaurantService";
-import MenusFormValidator from '../../components/Menus/MenusFormValidator'
+import { driverService } from "../../services/driverService";
+import DriversFormValidator from '../../components/Drivers/DriversFormValidator'
 
-const ListMenu = () => {
+const ListDrivers = () => {
   const [data, setData] = useState([]);
-  const [editingMenu, setEditingMenu] = useState(null);
+  const [editingDriver, setEditingDriver] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [products, setProducts] = useState([]);
-  const [restaurants, setRestaurants] = useState([]);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-    const menus = await menuService.getMenus();
-    const productsData = await productService.getProducts();
-    const restaurantsData = await restaurantService.getRestaurants();
-    setData(menus);
-    setProducts(productsData);
-    setRestaurants(restaurantsData);  
+    const drivers = await driverService.getDrivers();
+    setData(drivers);
   };
 
   const handleView = (id) => {
@@ -35,22 +27,22 @@ const ListMenu = () => {
     setShowCreateModal(true);
   };
 
-  const handleCreate = async (newMenu) => {
+  const handleCreate = async (newDriver) => {
     try {
-      const created = await menuService.createMenu(newMenu);
+      const created = await driverService.createDriver(newDriver);
       if (created) {
-        Swal.fire("¡Creado!", "Menú agregado correctamente", "success");
+        Swal.fire("¡Creado!", "drivere agregado correctamente", "success");
         setShowCreateModal(false);
         fetchData();
       }
     } catch (error) {
-      Swal.fire("Error", error.message || "Error al crear menú", "error");
+      Swal.fire("Error", error.message || "Error al crear drivere", "error");
     }
   };
 
-  const handleEdit = (menu) => {
+  const handleEdit = (driver) => {
     Swal.fire({
-      title: "¿Editar menú?",
+      title: "¿Editar información del conductor?",
       text: "¿Estás seguro de querer editar este registro?",
       icon: "question",
       showCancelButton: true,
@@ -58,16 +50,16 @@ const ListMenu = () => {
       cancelButtonText: "Cancelar"
     }).then((result) => {
       if (result.isConfirmed) {
-        setEditingMenu(menu);
+        setEditingDriver(driver);
       }
     });
   };
 
   const handleUpdate = async (updatedData) => {
     try {
-      await menuService.updateMenu(editingMenu.id, updatedData);
-      Swal.fire("¡Actualizado!", "Menú actualizado correctamente", "success");
-      setEditingMenu(null);
+      await driverService.updateDriver(editingDriver.id, updatedData);
+      Swal.fire("¡Actualizado!", "Información del conductor actualizado correctamente", "success");
+      setEditingDriver(null);
       fetchData();
     } catch (error) {
       Swal.fire("Error", error.message || "Error al actualizar", "error");
@@ -87,7 +79,7 @@ const ListMenu = () => {
       cancelButtonText: "No"
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const success = await menuService.deleteMenu(id);
+        const success = await driverService.deleteDriver(id);
         if (success) {
           Swal.fire({
             title: "Eliminado",
@@ -106,7 +98,7 @@ const ListMenu = () => {
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
-              Menus disponibles
+              Conductores disponibles
             </h3>
           </div>
           <div className="flex flex-col gap-5.5 p-6.5">
@@ -114,10 +106,11 @@ const ListMenu = () => {
               <table className="w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3">Restaurante</th>
-                    <th className="px-6 py-3">Producto</th>
-                    <th className="px-6 py-3">Precio</th>
-                    <th className="px-6 py-3">Disponibilidad</th>
+                    <th className="px-6 py-3">Nombre</th>
+                    <th className="px-6 py-3">Número de licencia</th>
+                    <th className="px-6 py-3">Teléfono</th>
+                    <th className="px-6 py-3">Correo</th>
+                    <th className="px-6 py-3">Estado</th>
                     <th className="px-6 py-3">Acciones</th>
                   </tr>
                 </thead>
@@ -127,10 +120,11 @@ const ListMenu = () => {
                       key={item.id}
                       className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200"
                     >
-                      <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{item.restaurant.name}</td>
-                      <td className="px-6 py-4">{item.product.name}</td>
-                      <td className="px-6 py-4">{item.price}</td>
-                      <td className="px-6 py-4">{item.availability}</td>
+                      <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{item.name}</td>
+                      <td className="px-6 py-4">{item.license_number}</td>
+                      <td className="px-6 py-4">{item.phone}</td>
+                      <td className="px-6 py-4">{item.email}</td>
+                      <td className="px-6 py-4">{item.status}</td>
                       <td className="px-6 py-4 space-x-2">
                         <button
                           onClick={() => handleView(item.id ?? 0)}
@@ -166,18 +160,16 @@ const ListMenu = () => {
       <CopyPlus  size={40} />
                         </button>
       {/* Modal de edición - Debe estar fuera de la tabla pero dentro del return principal */}
-    {editingMenu && (
+    {editingDriver && (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
           <div className="p-6">
-            <h3 className="text-lg font-bold mb-4">Editar menú</h3>
-            <MenusFormValidator
+            <h3 className="text-lg font-bold mb-4">Editar conductores</h3>
+            <DriversFormValidator
               mode={2}
               handleUpdate={handleUpdate}
-              menu={editingMenu}
-              products={products}
-              restaurants={restaurants}
-              onClose={() => setEditingMenu(null)}
+              driver={editingDriver}
+              onClose={() => setEditingDriver(null)}
             />
           </div>
         </div>
@@ -187,22 +179,19 @@ const ListMenu = () => {
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
           <div className="p-6">
-            <h3 className="text-lg font-bold mb-4">Agregar menú</h3>
-            <MenusFormValidator
+            <h3 className="text-lg font-bold mb-4">Agregar conductor</h3>
+            <DriversFormValidator
               mode={1}
-              handleCreate={handleCreate}
-              products={products}
-              restaurants={restaurants}            
+              handleCreate={handleCreate}            
               onClose={() => setShowCreateModal(false)}
             />
           </div>
         </div>
       </div>
     )}
-    
     </div>
     
   );
 };
 
-export default ListMenu;
+export default ListDrivers;
