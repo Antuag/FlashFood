@@ -7,6 +7,7 @@ import { ProveedorGlobal } from './contextoGlobal';
 import Login from './components/login';
 import ProductosCrud from './pages/productos/productosCrud';
 import PedidosCrud from './pages/pedidos/pedidosCrud';
+import Inconveniente from './pages/Inconvenientes/CrudInconvenientes';
 
 function AppContent() {
   const location = useLocation();
@@ -20,6 +21,7 @@ function AppContent() {
           <Route path="/" element={<Login />} />
           <Route path="/productos" element={<ProductosCrud />} />
           <Route path="/pedidos" element={<PedidosCrud />} />
+          <Route path="/inconvenientes" element={<Inconveniente />} />
           {/* Agrega más rutas aquí */}
         </Routes>
       </div>
