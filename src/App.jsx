@@ -1,31 +1,38 @@
 // src/App.jsx
 import React from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Login from './components/login';
-import Chatbot from './pages/Chatbot/Chatbot';
-import Graficos from './pages/Graficos/Graficos';
-import CrudInconvenientes from './pages/Inconvenientes/CrudInconvenientes';
-import NotificacionesPedidos from './pages/Notificaciones/NotificacionesPedidos';
-import PedidosCrud from './pages/pedidos/pedidosCrud';
-import ProductosCrud from './pages/productos/productosCrud';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import './styles/App.css';
+import { ProveedorGlobal } from './contextoGlobal';
 
-function App() {
+import Login from './components/login';
+import ProductosCrud from './pages/productos/productosCrud';
+import PedidosCrud from './pages/pedidos/pedidosCrud';
+
+function AppContent() {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/';
+
   return (
-    <Router>
-      <div className="App">
+    
+
+      <div className="page-container">
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/productos" element={<ProductosCrud />} />
           <Route path="/pedidos" element={<PedidosCrud />} />
-          <Route path="/inconvenientes" element={<CrudInconvenientes />} />
-          <Route path="/notificaciones" element={<NotificacionesPedidos />} />
-          <Route path="/chatbot" element={<Chatbot />} />
-          <Route path="/graficos" element={<Graficos />} />
+          {/* Agrega más rutas aquí */}
         </Routes>
       </div>
-    </Router>
+
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <ProveedorGlobal>
+      <AppContent />
+      </ProveedorGlobal>
+    </Router>
+  );
+}
