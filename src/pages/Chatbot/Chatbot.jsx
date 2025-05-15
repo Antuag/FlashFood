@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../../styles/chat.css';
 
 const API_KEY = 'AIzaSyAjCfoERXorGMNWB-Xk375XAU56rbocmj8';
+const BACKEND_URL = 'http://127.0.0.1:5000';
 
 export default function Chatbot() {
   const [userMessage, setUserMessage] = useState('');
@@ -9,17 +10,47 @@ export default function Chatbot() {
   const [loading, setLoading] = useState(false);
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState('');
+  const [backendData, setBackendData] = useState('');
 
   useEffect(() => {
     const loadVoices = () => {
       const voicesList = window.speechSynthesis.getVoices();
       setVoices(voicesList);
     };
-
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.onvoiceschanged = loadVoices;
       loadVoices();
     }
+  }, []);
+
+  // Cargar información del backend
+  useEffect(() => {
+    const endpoints = [
+      'restaurants', 'products', 'menus', 'customers', 'orders',
+      'addresses', 'motorcycles', 'drivers', 'shifts', 'issues', 'photos'
+    ];
+
+    const fetchAllData = async () => {
+      try {
+        const results = await Promise.all(
+          endpoints.map(endpoint =>
+            fetch(`${BACKEND_URL}/${endpoint}`)
+              .then(res => res.json())
+              .then(data => ({ endpoint, data }))
+          )
+        );
+
+        const resumen = results.map(r =>
+          `Datos de ${r.endpoint}:\n${JSON.stringify(r.data, null, 2)}`
+        ).join('\n\n');
+
+        setBackendData(resumen);
+      } catch (error) {
+        console.error('Error al obtener datos del backend:', error);
+      }
+    };
+
+    fetchAllData();
   }, []);
 
   const speak = (text) => {
@@ -49,21 +80,24 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
+      const prompt = `
+Eres un asistente especializado en la página web Flash Food. Tu trabajo es responder en español preguntas sobre restaurantes, productos, menús, clientes, pedidos, direcciones, motos, conductores, turnos, inconvenientes y fotos.
+
+Aquí tienes la información actual de la base de datos:
+
+${backendData}
+
+Pregunta del usuario: ${userMessage}
+Respuesta del asistente:
+      `;
+
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  {
-                    text: `Eres un asistente especializado en la página web Flash Food... Usuario: ${userMessage}\nAsistente:`
-                  }
-                ]
-              }
-            ]
+            contents: [{ parts: [{ text: prompt }] }]
           })
         }
       );
@@ -91,17 +125,12 @@ export default function Chatbot() {
     <div className="chat-container">
       <h2>Asistente Flash Food</h2>
 
-      <div className="cat-avatar">        
+      <div className="cat-avatar">
         <div className="cat-eyes">
-  <div className="cat-eye">
-    <div className="pupil"></div>
-  </div>
-  <div className="cat-eye">
-    <div className="pupil"></div>
-  </div>
-</div>
-
-        <div id="cat-mouth"></div>        
+          <div className="cat-eye"><div className="pupil"></div></div>
+          <div className="cat-eye"><div className="pupil"></div></div>
+        </div>
+        <div id="cat-mouth"></div>
       </div>
 
       <div>
