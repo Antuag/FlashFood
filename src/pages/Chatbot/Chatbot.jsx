@@ -91,20 +91,17 @@ export default function Chatbot() {
     <div className="chat-container">
       <h2>Asistente Flash Food</h2>
 
-      <div className="cat-avatar">
-        <div className="cat-ear left-ear"></div>
-        <div className="cat-ear right-ear"></div>
+      <div className="cat-avatar">        
         <div className="cat-eyes">
-          <div className="cat-eye"></div>
-          <div className="cat-eye"></div>
-        </div>
-        <div id="cat-mouth"></div>
-        <div className="cat-whiskers">
-          <div className="whisker" style={{ transform: 'rotate(-20deg)' }}></div>
-          <div className="whisker" style={{ transform: 'rotate(20deg)' }}></div>
-          <div className="whisker" style={{ transform: 'rotate(20deg)' }}></div>
-          <div className="whisker" style={{ transform: 'rotate(-20deg)' }}></div>
-        </div>
+  <div className="cat-eye">
+    <div className="pupil"></div>
+  </div>
+  <div className="cat-eye">
+    <div className="pupil"></div>
+  </div>
+</div>
+
+        <div id="cat-mouth"></div>        
       </div>
 
       <div>
