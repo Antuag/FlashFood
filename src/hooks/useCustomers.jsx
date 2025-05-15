@@ -1,26 +1,29 @@
 import { useEffect, useState } from "react";
 import { getCustomers, deleteCustomer, updateCustomer } from "../services/CustomerService";
 
-export function useCustomers(loggedUser) {
+export function useCustomers(loggedUser, setCustomer) {
     const [customers, setCustomers] = useState([]);
     const [editingCustomerId, setEditingCustomerId] = useState(null);
     const [editFormData, setEditFormData] = useState({ name: "", email: "", phone: "" });
 
     useEffect(() => {
-        getCustomers().then(setCustomers);
-    }, []);
+        if (loggedUser) {
+            getCustomers().then(setCustomers);
+        }
+    }, [loggedUser]);
 
     const handleDelete = async (id) => {
         await deleteCustomer(id);
         setCustomers(customers.filter(c => c.id !== id));
     };
 
-    const handleUpdate = async (id) => {
-        await updateCustomer(id, editFormData);
-        setCustomers(customers.map(c => (c.id === id ? { ...c, ...editFormData } : c)));
+    const handleUpdate = async (id, updateData) => {
+        await updateCustomer(id, updateData);
+        setCustomers(customers.map(c => (c.id === id ? { ...c, ...updateData } : c)));
         setEditingCustomerId(null);
         if (id === loggedUser.id) {
-            const updated = { ...loggedUser, ...editFormData };
+            const updated = { ...loggedUser, ...updateData };
+            setCustomer({ ...updated });
             localStorage.setItem("customer", JSON.stringify(updated));
         }
     };

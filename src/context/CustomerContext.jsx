@@ -1,5 +1,7 @@
 // src/context/CustomerContext.jsx
 import React, { createContext, useContext, useState, useEffect } from "react";
+    
+
 
 // Creamos el contexto
 const CustomerContext = createContext();
@@ -14,8 +16,10 @@ export const CustomerProvider = ({ children }) => {
     // Cargar el cliente desde localStorage al iniciar la app
     useEffect(() => {
         const storedCustomer = localStorage.getItem("customer");
+        console.log("Datos en localStorage:", storedCustomer);
         if (storedCustomer) {
-            setCustomer(JSON.parse(storedCustomer));
+            const parsedCustomer = JSON.parse(storedCustomer);
+            setCustomer(parsedCustomer);
         }
     }, []);
 

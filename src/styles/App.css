@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+/* Ocultar la barra de scroll pero permitir el scroll */
+.customers-scrollbar {
+  scrollbar-width: thin;         /* Firefox */
+  scrollbar-color: transparent transparent; /* Firefox */
+}
+.customers-scrollbar::-webkit-scrollbar {
+  width: 0px;                    /* Chrome/Safari/Edge */
+  background: transparent;
+}

@@ -1,14 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography, Card } from "@mui/material";
 import { useCustomers } from "../hooks/useCustomers";
-import CustomerList from "../components/CustomerList";
-import CustomerProfile from "../components/CustomerProfile";
-import EditCustomerForm from "../components/EditCustomerForm";
-import { useState } from "react";
+import CustomerList from "../components/customerComponents/CustomerList";
+import CustomerProfile from "../components/customerComponents/CustomerProfile";
+import EditCustomerForm from "../components/customerComponents/EditCustomerForm";
+import { useCustomer } from "../context/CustomerContext";
 
 function CustomersPage() {
     const navigate = useNavigate();
-    const [loggedUser] = useState(JSON.parse(localStorage.getItem("customer")) || {});
+    const { customer: loggedUser, setCustomer } = useCustomer();
+
     const {
         customers,
         editingCustomerId,
@@ -17,38 +18,95 @@ function CustomersPage() {
         handleDelete,
         handleUpdate,
         handleEditClick,
-        handleInputChange,
-    } = useCustomers(loggedUser);
+    } = useCustomers(loggedUser, setCustomer);
 
     return (
-        <Box display="flex" height="100vh" bgcolor="#f9f5f0" color="#333">
-            <Box width="30%" p={2} borderRight="1px solid #ccc" bgcolor="#e6d3b3" overflow="auto">
-                <CustomerList
-                    customers={customers}
-                    loggedUser={loggedUser}
-                    onEdit={handleEditClick}
-                    onDelete={handleDelete}
-                />
-            </Box>
-            <Box flex={1} p={4} overflow="auto">
-                <h2>Mi Perfil</h2>
-                <CustomerProfile user={loggedUser} />
-                {editingCustomerId === loggedUser.id && (
-                    <EditCustomerForm
-                        formData={editFormData}
-                        onChange={handleInputChange}
-                        onSave={() => handleUpdate(loggedUser.id)}
-                        onCancel={() => setEditingCustomerId(null)}
-                    />
-                )}
-                <Button
-                    onClick={() => navigate("/login")}
-                    variant="contained"
-                    sx={{ mt: 4, bgcolor: "#a0522d", "&:hover": { bgcolor: "#8b4513" } }}
+        <Box
+            minHeight="100vh"
+            width="100vw"
+            bgcolor="var(--background)"
+            color="var(--foreground)"
+            display="flex"
+            justifyContent="center"
+            alignItems="flex-start"
+            pt="200px"
+        >
+            <Card
+                sx={{
+                    width: { xs: '98%', sm: 600, md: 1200 },
+                    p: { xs: 2, sm: 4 },
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    gap: 2,
+                    bgcolor: 'background.paper',
+                    borderRadius: 3,
+                    boxShadow: 6,
+                }}
+            >
+                {/* Lista de clientes */}
+                
+                <Box
+                    width={{ xs: "100%", md: "30%" }}
+                    minWidth={0}
+                    p={4}
+                    borderRight={{ md: "1px solid", xs: "none" }}
+                    borderColor="divider"
+                    className="customers-scrollbar"
+                    sx={{
+                        color: "text.primary",
+                        overflowY: "auto",
+                        maxHeight: { xs: 250, md: 500 },
+                        mb: { xs: 2, md: 0 }
+                    }}
                 >
-                    Continuar pedido
-                </Button>
-            </Box>
+                    <CustomerList
+                        customers={customers}
+                        loggedUser={loggedUser}
+                        onEdit={handleEditClick}
+                        onDelete={handleDelete}
+                    />
+                </Box>
+
+                {/* Perfil y edición */}
+                <Box
+                    flex={1}
+                    p={4}
+                    sx={{
+                        overflow: "auto",
+                        color: "text.primary",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "flex-start"
+                    }}
+                >
+                    <Typography variant="h4" gutterBottom>
+                        Mi Perfil
+                    </Typography>
+
+                    <CustomerProfile user={loggedUser} />
+
+                    {loggedUser && editingCustomerId === loggedUser.id && (
+                        <EditCustomerForm
+                            formData={editFormData}
+                            onSave={(newValues) => handleUpdate(loggedUser.id, newValues)}
+                            onCancel={() => setEditingCustomerId(null)}
+                        />
+                    )}
+
+                    <Button
+                        onClick={() => navigate("/turnos")}
+                        variant="contained"
+                        sx={{
+                            mt: 1,
+                            bgcolor: "primary.main",
+                            "&:hover": { bgcolor: "primary.dark" },
+                        }}
+                    >
+                        Continuar motos
+                    </Button>
+                </Box>
+            </Card>
         </Box>
     );
 }
