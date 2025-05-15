@@ -1,6 +1,6 @@
 // src/components/ProductosCrud.jsx
 import React, { useEffect, useState } from 'react';
-import { getProducts } from './productService';
+import { getProducts } from '../../services/productService';
 import CatalogoProductos from './CatalogoProductos';
 import ModalDetalles from './ModalDetalles';
 import Carrito from './Carrito';
