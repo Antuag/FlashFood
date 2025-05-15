@@ -10,6 +10,8 @@ import PedidosCrud from './pages/pedidos/pedidosCrud';
 import Inconveniente from './pages/Inconvenientes/CrudInconvenientes';
 import Chat from './pages/Chatbot/Chatbot';
 import ListRestaurants from './pages/Restaurant/List';
+import ListMenus from './pages/Menu/List';
+
 
 
 function AppContent() {
@@ -22,11 +24,14 @@ function AppContent() {
       <div className="page-container">
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/productos" element={<ProductosCrud />} />
+          <Route path="/products" element={<ProductosCrud />} />
           <Route path="/pedidos" element={<PedidosCrud />} />
           <Route path="/inconvenientes" element={<Inconveniente />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/restaurants" element={<ListRestaurants />} />
+          <Route path="/restaurants" element={<ListRestaurants/>} />
+          <Route path="/menus" element={<ListMenus/>} /> 
+          {/* Agrega más rutas aquí */}
         </Routes>
       </div>
 
