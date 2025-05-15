@@ -11,6 +11,8 @@ import Inconveniente from './pages/Inconvenientes/CrudInconvenientes';
 // import Navbar from './components/navbar';
 // import Footer from './components/footer';
 import ListRestaurants from './pages/Restaurant/List';
+import ListMenus from './pages/Menu/List';
+
 
 
 function AppContent() {
@@ -23,10 +25,11 @@ function AppContent() {
       <div className="page-container">
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/productos" element={<ProductosCrud />} />
+          <Route path="/products" element={<ProductosCrud />} />
           <Route path="/pedidos" element={<PedidosCrud />} />
           <Route path="/inconvenientes" element={<Inconveniente />} />
           <Route path="/restaurants" element={<ListRestaurants/>} />
+          <Route path="/menus" element={<ListMenus/>} /> 
           {/* Agrega más rutas aquí */}
         </Routes>
       </div>

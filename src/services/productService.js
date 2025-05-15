@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/products';
+const API_URL = 'http://localhost:5000/products';
 
 export const getProducts = async () => {
   try {
@@ -40,3 +40,10 @@ export const deleteProduct = async (id) => {
     throw error;
   }
 }; 
+
+export const productService = {
+  createProduct,
+  deleteProduct,
+  getProducts,
+  updateProduct,
+};

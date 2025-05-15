@@ -81,9 +81,9 @@ export const deleteRestaurant = async (id) => {
 };
 
 export const restaurantService = {
-  createRestaurant,
-  deleteRestaurant,
-  getRestaurantById,
-  getRestaurants,
-  updateRestaurant,
+    createRestaurant,
+    deleteRestaurant,
+    getRestaurantById,
+    getRestaurants,
+    updateRestaurant,
 };
