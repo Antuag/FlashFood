@@ -37,28 +37,40 @@ export default function CrudInconvenientes() {
     setNewPhoto({ ...newPhoto, [name]: value });
   };
 
-  const handleCreatePhoto = async () => {
-    if (!newPhoto.caption || !newPhoto.file) {
-      setMessage("Debes agregar una descripción y una imagen.");
-      return;
-    }
+  // Solo cambia la función handleCreatePhoto así:
 
-    try {
-      const photoCreated = await createPhoto(newPhoto);
-      setPhotos([...photos, photoCreated]);
-      setNewPhoto({
-        caption: "",
-        image_url: "",
-        issue_id: 1,
-        taken_at: "",
-        file: null,
-      });
-      setMessage("Inconveniente registrado correctamente.");
-    } catch (error) {
-      console.error("Error al registrar inconveniente:", error);
-      setMessage("Error al registrar inconveniente.");
-    }
-  };
+  const handleCreatePhoto = async () => {
+  if (!newPhoto.caption || !newPhoto.image_url) {
+    setMessage("Debes agregar una descripción y la ruta de la imagen.");
+    return;
+  }
+
+  try {
+    // Solo enviar datos como JSON, sin archivo
+    const photoData = {
+      caption: newPhoto.caption,
+      issue_id: newPhoto.issue_id,
+      taken_at: newPhoto.taken_at || null,
+      image_url: newPhoto.image_url,
+    };
+
+    const photoCreated = await createPhoto(photoData);
+    setPhotos([...photos, photoCreated]);
+
+    setNewPhoto({
+      caption: "",
+      image_url: "",
+      issue_id: 1,
+      taken_at: "",
+      file: null,
+    });
+    setMessage("Inconveniente registrado correctamente.");
+  } catch (error) {
+    console.error("Error al registrar inconveniente:", error.response?.data || error.message || error);
+    setMessage("Error al registrar inconveniente.");
+  }
+};
+
 
   const handleUpdateCaption = async (id, newCaption) => {
     if (!newCaption) return;

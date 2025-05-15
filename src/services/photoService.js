@@ -13,26 +13,18 @@ export const getPhotos = async () => {
   }
 };
 
-// Crear una nueva foto con FormData (imagen y datos)
+// Crear una nueva foto con FormData (recibe FormData desde el componente)
 export const createPhoto = async (photoData) => {
   try {
-    const formData = new FormData();
-    formData.append('caption', photoData.caption);
-    formData.append('issue_id', photoData.issue_id);
-    formData.append('taken_at', photoData.taken_at);
-    formData.append('image', photoData.file); // archivo real
-
-    const response = await axios.post(API_URL, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    // Enviar JSON, no FormData
+    const response = await axios.post(API_URL, photoData);
     return response.data;
   } catch (error) {
     console.error('Error al crear la foto:', error.response?.data || error);
     throw error;
   }
 };
+
 
 // Actualizar datos de una foto (ejemplo actualizar caption)
 export const updatePhoto = async (id, photoData) => {
