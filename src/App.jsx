@@ -27,6 +27,8 @@ function AppContent() {
           <Route path="/productos" element={<ProductosCrud />} />
           <Route path="/pedidos" element={<PedidosCrud />} />
           <Route path="/inconvenientes" element={<Inconveniente />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/restaurants" element={<ListRestaurants />} />
           {/* Agrega más rutas aquí */}
         </Routes>
       </div>
