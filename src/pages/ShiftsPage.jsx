@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Paper } from '@mui/material';
-import ShiftForm from '../components/shifts/ShiftForm';
-import ShiftList from '../components/shifts/ShiftList';
+import ShiftForm from '../components/Shifts/ShiftForm';
+import ShiftList from '../components/Shifts/ShiftList';
 import { getShifts } from '../services/ShiftService';
 
 // Componente principal de la página de turnos

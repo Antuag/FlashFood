@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Typography, Card } from "@mui/material";
 import { useCustomers } from "../hooks/useCustomers";
-import CustomerList from "../components/customerComponents/CustomerList";
-import CustomerProfile from "../components/customerComponents/CustomerProfile";
-import EditCustomerForm from "../components/customerComponents/EditCustomerForm";
+import CustomerList from "../components/Customer/CustomerList";
+import CustomerProfile from "../components/Customer/CustomerProfile";
+import EditCustomerForm from "../components/Customer/EditCustomerForm";
 import { useCustomer } from "../context/CustomerContext";
 
 function CustomersPage() {
@@ -95,7 +95,7 @@ function CustomersPage() {
                     )}
 
                     <Button
-                        onClick={() => navigate("/turnos")}
+                        onClick={() => navigate("/pedidos")}
                         variant="contained"
                         sx={{
                             mt: 1,
@@ -103,7 +103,7 @@ function CustomersPage() {
                             "&:hover": { bgcolor: "primary.dark" },
                         }}
                     >
-                        Continuar motos
+                        Continuar a pedidos
                     </Button>
                 </Box>
             </Card>
