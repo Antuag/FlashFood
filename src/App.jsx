@@ -7,6 +7,9 @@ import MotorcyclePage from "./pages/MotorcyclePage";
 import ShiftsPage from "./pages/ShiftsPage";
 import { Toaster } from "react-hot-toast";
 import NavBar from "./components/navBar";
+import MotoMapRealtime from "./components/MotoMap"
+
+
 
 // MUI Theme
 import { ThemeProvider, CssBaseline } from "@mui/material";
@@ -25,6 +28,7 @@ function App() {
               <Route path="/clientes" element={<CustomersPage />} />
               <Route path="/motos" element={<MotorcyclePage />} />
               <Route path="/turnos" element={<ShiftsPage />} />
+              <Route path="/mapa" element={<MotoMapRealtime plate="DEL009"/>} />
               <Route path="/" element={<Navigate to="/login" replace />} />
             </Routes>
             <Toaster position="top-right" />

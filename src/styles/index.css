@@ -21,3 +21,10 @@ code {
   --muted: #2a2a2a;
   --border: #333;
 }
+
+/* index.css */
+.leaflet-container {
+  height: 80vh;
+  width: 100%;
+}
+
