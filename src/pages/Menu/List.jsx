@@ -18,10 +18,10 @@ const ListMenu = () => {
   }, []);
 
   const fetchData = async () => {
-    const menus = await menuService.getMenus();
+    const response = await menuService.getMenus();
     const productsData = await productService.getProducts();
     const restaurantsData = await restaurantService.getRestaurants();
-    setData(menus);
+    setData(response.data);
     setProducts(productsData);
     setRestaurants(restaurantsData);  
   };

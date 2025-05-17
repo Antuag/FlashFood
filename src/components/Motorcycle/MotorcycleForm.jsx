@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Formik, Form, Field, useFormikContext } from 'formik';
 import * as Yup from 'yup';
-import { createMotorcycle, updateMotorcycle } from '../../services/MotorcycleService';
+import { createMotorcycle, updateMotorcycle } from '../../services/motorcycleService';
 import toast from 'react-hot-toast';
 
 function generateRandomPlate() {

@@ -31,10 +31,10 @@ function LoginPage() {
                 .then((userCredential) => {
                     alert("Registration successful!");
                     const userWithExtras = {
-                    ...userCredential.user,
-                    displayName: name,
-                    phoneNumber: phone,
-                };
+                        ...userCredential.user,
+                        displayName: name,
+                        phoneNumber: phone,
+                    };
                     syncWithBackend(userWithExtras, setCustomer, navigate);
                 })
                 .catch((error) => {
@@ -55,9 +55,9 @@ function LoginPage() {
     const handleGoogleLogin = () => {
         signInWithPopup(auth, providerGoogle)
             .then((result) => {
-                const credential = GoogleAuthProvider.credentialFromResult(result); 
+                const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
-                console.log("Google token:", token);
+
                 localStorage.setItem("accessToken", token);
                 alert("Google login successful!");
                 syncWithBackend(result.user, setCustomer, navigate);
@@ -70,9 +70,9 @@ function LoginPage() {
     const handleGithubLogin = () => {
         signInWithPopup(auth, providerGithub)
             .then((result) => {
-                const credential = GithubAuthProvider.credentialFromResult(result); 
+                const credential = GithubAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
-                console.log("Github token:", token);
+
                 localStorage.setItem("accessToken", token);
                 alert("Github login successful!");
                 syncWithBackend(result.user, setCustomer, navigate);
@@ -85,9 +85,8 @@ function LoginPage() {
     const handleMicrosoftLogin = () => {
         signInWithPopup(auth, microsoftProvider)
             .then((result) => {
-                const credential = OAuthProvider.credentialFromResult(result); 
+                const credential = OAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
-                console.log("Microsoft token:", token);
                 localStorage.setItem("accessToken", token);
                 alert("Microsoft login successful!");
                 syncWithBackend(result.user, setCustomer, navigate);
@@ -107,7 +106,7 @@ function LoginPage() {
             justifyContent="center"
             alignItems="center"
             height="100vh"
-            sx={{ background: "linear-gradient(135deg, #FF5722, #FF9800)" }}
+
         >
             <Paper elevation={6} sx={{ padding: 4, width: 400, borderRadius: 3 }}>
                 <Typography variant="h3" align="center" color="primary" gutterBottom>

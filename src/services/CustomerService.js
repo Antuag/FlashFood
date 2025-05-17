@@ -10,7 +10,7 @@ export const getCustomers = (token) =>
         },
     }).then(res => res.data);
 
-// Obtener cliente por email
+// Obtener cliente por email//arreglar funciion dejarla por id
 export const getCustomerByEmail = async (email, token) => {
     const customers = await getCustomers(token);
     return customers.find(c => c.email === email);

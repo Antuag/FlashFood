@@ -1,29 +1,53 @@
-// src/components/NavBar.jsx
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { FaBars, FaTimes, FaUtensils } from "react-icons/fa";
 import "../styles/NavBar.css";
 
 const NavBar = () => {
     const { pathname } = useLocation();
+    const [open, setOpen] = useState(false);
 
     if (pathname === "/login") return null;
+
+    const links = [
+        { to: "/login", label: "Login" },
+        { to: "/clientes", label: "Clientes" },
+        { to: "/motos", label: "Motos" },
+        { to: "/turnos", label: "Turnos" },
+        { to: "/productos", label: "Productos" },
+        { to: "/direcciones", label: "Direcciones" },
+        { to: "/incovenientes", label: "Incovenientes" },
+        { to: "/chat", label: "Chat" },
+        { to: "/restaurantes", label: "Restaurantes" },
+        { to: "/menus", label: "Menus" },
+        { to: "/conductores", label: "Conductores" },
+        { to: "/mapa", label: "Mapa" },
+        { to: "/ordenes", label: "Ordenes" },
+        
+    ];
 
     return (
         <nav className="navbar">
             <div className="navbar-container">
-                <h1 className="navbar-logo">FlashFood</h1>
-                <ul className="navbar-links">
-                    <li><Link to="/login">Login</Link></li>
-                    <li><Link to="/clientes">Clientes</Link></li>
-                    <li><Link to="/motos">Motos</Link></li>
-                    <li><Link to="/turnos">Turnos</Link></li>
-                    <li><Link to="/productos">Productos</Link></li>
-                    <li><Link to="/pedidos">Pedidos</Link></li>
-                    <li><Link to="/incovenientes">Incovenientes</Link></li>
-                    <li><Link to="/chat">Chat</Link></li>
-                    <li><Link to="/restaurantes">Restaurantes</Link></li>
-                    <li><Link to="/menus">Menus</Link></li>
-                    <li><Link to="/conductores">Conductores</Link></li>
-                    <li><Link to="/mapa">Mapa</Link></li>
+                <div className="navbar-logo">
+                    <FaUtensils style={{ marginRight: 8, color: "#ff9800" }} />
+                    FlashFood
+                </div>
+                <button className="navbar-toggle" onClick={() => setOpen(!open)}>
+                    {open ? <FaTimes /> : <FaBars />}
+                </button>
+                <ul className={`navbar-links ${open ? "open" : ""}`}>
+                    {links.map(link => (
+                        <li key={link.to}>
+                            <Link
+                                to={link.to}
+                                className={pathname === link.to ? "active" : ""}
+                                onClick={() => setOpen(false)}
+                            >
+                                {link.label}
+                            </Link>
+                        </li>
+                    ))}
                 </ul>
             </div>
         </nav>

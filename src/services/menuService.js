@@ -1,82 +1,65 @@
-// import { menu } from "../models/menu";
+// menuService.js ajustado para tener estructura similar a motorcycle
+import axios from 'axios';
 
-const API_URL = `http://127.0.0.1:5000/menus`;
+const API_URL = 'http://127.0.0.1:5000';
 
-
-// Obtener todos los Menús
+// Convertimos el servicio para que devuelva la misma estructura que motorcycleService
 export const getMenus = async () => {
-    console.log("aqui " + API_URL);
+    console.log("Obteniendo menús desde:", `${API_URL}/menus`);
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Error al obtener Menús");
-        return await response.json();
+        // Usamos axios en lugar de fetch para mantener consistencia
+        const response = await axios.get(`${API_URL}/menus`);
+        console.log("Respuesta de menús:", response);
+        return response; // Devolvemos el objeto completo como motorcycleService
     } catch (error) {
-        console.error(error);
-        return [];
+        console.error("Error al obtener menús:", error);
+        // Devolvemos un objeto similar a lo que devolvería axios en caso de éxito pero con array vacío
+        return { data: [] };
     }
 };
 
-// Obtener un Menú por ID
 export const getMenuById = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/${id}`);
-        if (!response.ok) throw new Error("Menú no encontrado");
-        return await response.json();
+        const response = await axios.get(`${API_URL}/menus/${id}`);
+        return response;
     } catch (error) {
         console.error(error);
-        return null;
+        return { data: null };
     }
 };
 
-// Crear un nuevo Menú
 export const createMenu = async (menu) => {
     try {
-        const response = await fetch(`${API_URL}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({
-                restaurant_id: menu.restaurant_id,
-                product_id: menu.product_id,
-                price: menu.price,
-                availability: menu.availability
-            })
+        const response = await axios.post(`${API_URL}/menus`, {
+            restaurant_id: menu.restaurant_id,
+            product_id: menu.product_id,
+            price: menu.price,
+            availability: menu.availability
         });
-        if (!response.ok) throw new Error("Error al crear Menú");
-        return await response.json();
+        return response;
     } catch (error) {
         console.error(error);
-        return null;
+        throw error;
     }
 };
 
-// Actualizar Menú
 export const updateMenu = async (id, menu) => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(menu),
-        });
-        if (!response.ok) throw new Error("Error al actualizar Menú");
-        return await response.json();
+        const response = await axios.put(`${API_URL}/menus/${id}`, menu);
+        return response;
     } catch (error) {
         console.error(error);
-        return null;
+        throw error;
     }
 };
 
-// Eliminar Menú
 export const deleteMenu = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        if (!response.ok) throw new Error("Error al eliminar Menú");
-        return true;
+        const response = await axios.delete(`${API_URL}/menus/${id}`);
+        return response;
     } catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 };
 

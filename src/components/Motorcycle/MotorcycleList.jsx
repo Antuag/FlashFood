@@ -1,4 +1,4 @@
-import { deleteMotorcycle } from '../../services/MotorcycleService';
+import { deleteMotorcycle } from '../../services/motorcycleService';
 import { Card, CardContent, Typography, Button, Grid, Chip, Box } from '@mui/material';
 
 export default function MotorcycleList({ onEdit, motorcycles, reload }) {

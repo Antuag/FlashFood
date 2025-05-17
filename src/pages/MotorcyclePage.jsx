@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Box, Card } from '@mui/material';
 import MotorcycleForm from '../components/Motorcycle/MotorcycleForm';
 import MotorcycleList from '../components/Motorcycle/MotorcycleList';
-import { getMotorcycles } from '../services/MotorcycleService';
+import { getMotorcycles } from '../services/motorcycleService';
 
 export default function Motorcycles() {
     const [selectedMoto, setSelectedMoto] = useState(null);

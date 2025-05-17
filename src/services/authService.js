@@ -1,4 +1,4 @@
-import { getCustomerByEmail, createCustomer } from "./CustomerService";
+import { getCustomerByEmail, createCustomer } from "./customerService";
 import { auth } from "../firebase"; // Asegúrate de tener esta referencia
 
 
