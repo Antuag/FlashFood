@@ -31,10 +31,16 @@ function LoginPage() {
                 .then((userCredential) => {
                     alert("Registration successful!");
                     const userWithExtras = {
-                        ...userCredential.user,
-                        displayName: name,
-                        phoneNumber: phone,
+                        uid: userCredential.user.uid,
+                        email: userCredential.user.email,
+                        name: name,
+                        phone: phone,
+                        photo: userCredential.user.photoURL,
                     };
+                    // Guardar en localStorage
+                    localStorage.setItem("user", JSON.stringify(userWithExtras));
+                    // Guardar en contexto
+                    setCustomer(userWithExtras);
                     syncWithBackend(userWithExtras, setCustomer, navigate);
                 })
                 .catch((error) => {
@@ -60,6 +66,8 @@ function LoginPage() {
 
                 localStorage.setItem("accessToken", token);
                 alert("Google login successful!");
+                setCustomer(result.user)
+                localStorage.setItem("user", JSON.stringify(result.user))
                 syncWithBackend(result.user, setCustomer, navigate);
             })
             .catch((error) => {

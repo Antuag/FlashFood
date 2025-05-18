@@ -1,13 +1,11 @@
 // src/context/CustomerContext.jsx
 import React, { createContext, useContext, useState, useEffect } from "react";
-    
-
-
 // Creamos el contexto
 const CustomerContext = createContext();
 
 // Hook para usar el contexto fácilmente
 export const useCustomer = () => useContext(CustomerContext);
+
 
 // Componente proveedor
 export const CustomerProvider = ({ children }) => {

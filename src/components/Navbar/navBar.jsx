@@ -2,6 +2,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FaBars, FaTimes, FaUtensils, FaChevronDown, FaRobot, FaSignOutAlt } from "react-icons/fa";
 import "../../styles/NavBar.css";
+import { useCustomer } from "../../context/CustomerContext";
+import Avatar from "@mui/material/Avatar";
 
 const NavBar = () => {
     const { pathname } = useLocation();
@@ -10,6 +12,7 @@ const NavBar = () => {
     const [openRepartidor, setOpenRepartidor] = useState(false);
     const [openGestion, setOpenGestion] = useState(false);
     const [openTienda, setOpenTienda] = useState(false);
+    const { customer } = useCustomer();
 
     if (pathname === "/login") return null;
 
@@ -124,6 +127,23 @@ const NavBar = () => {
                 </ul>
                 {/* Logout al final */}
                 <div style={{ display: "flex", alignItems: "center", marginLeft: "auto" }}>
+                    {customer && (
+                        <Avatar
+                            src={customer.photo || ""}
+                            alt={customer.name || "avatar"}
+                            sx={{
+                                width: 36,
+                                height: 36,
+                                marginRight: 1,
+                                bgcolor: "#ff9800",
+                                fontWeight: 700,
+                                fontSize: 18,
+                            }}
+                        >
+                            {/* Si no hay foto, muestra la inicial */}
+                            {(!customer.photo && customer.name) ? customer.name[0].toUpperCase() : ""}
+                        </Avatar>
+                    )}
                     <button
                         className="navbar-dropdown-btn"
                         style={{
