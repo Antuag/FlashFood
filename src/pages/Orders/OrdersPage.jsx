@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import {
     getOrders, createOrder, updateOrder, deleteOrder
 } from '../../services/orderService';
@@ -71,14 +72,32 @@ export default function OrdersPage() {
         try {
             if (editingOrder) {
                 await updateOrder(editingOrder.id, values);
+                Swal.fire({
+                    icon: "success",
+                    title: "Pedido actualizado",
+                    text: "El pedido se actualizó correctamente.",
+                    timer: 1500,
+                    showConfirmButton: false,
+                });
             } else {
                 await createOrder(values);
+                Swal.fire({
+                    icon: "success",
+                    title: "Pedido creado",
+                    text: "El pedido se creó correctamente.",
+                    timer: 1500,
+                    showConfirmButton: false,
+                });
             }
             setEditingOrder(null);
             loadAll();
         } catch (err) {
             console.error('Error al guardar el pedido:', err);
-            // Aquí podrías mostrar un mensaje de error al usuario
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "No se pudo guardar el pedido.",
+            });
         }
     };
 
@@ -86,15 +105,22 @@ export default function OrdersPage() {
         try {
             await deleteOrder(id);
             loadAll();
+            Swal.fire({
+                icon: "success",
+                title: "Eliminado",
+                text: "El pedido ha sido eliminado.",
+                timer: 1500,
+                showConfirmButton: false,
+            });
         } catch (err) {
             console.error('Error al eliminar el pedido:', err);
-            // Aquí podrías mostrar un mensaje de error al usuario
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "No se pudo eliminar el pedido.",
+            });
         }
     };
-
-    if (loading) {
-        return <Typography variant="h6" align="center" py={4}>Cargando datos...</Typography>;
-    }
 
     if (error) {
         return (
@@ -108,38 +134,40 @@ export default function OrdersPage() {
     }
 
     return (
-        <Box sx={{ flexGrow: 1, padding: 4 }}>
-            <Grid container spacing={4}>
-                {/* Formulario */}
-                <Grid item xs={12} md={6}>
-                    <Card elevation={3}>
-                        <CardContent>
-                            <Typography variant="h6" gutterBottom>Formulario de Pedido</Typography>
-                            <OrderForm
-                                onSubmit={handleSubmit}
-                                initialValues={editingOrder}
-                                menus={menus}
-                                customers={customers}
-                                motorcycles={motorcycles}
-                            />
-                        </CardContent>
-                    </Card>
-                </Grid>
+        <Box sx={{ flexGrow: 1, p: { xs: 5, sm: 2, md: 10 }, pt: { xs: 90, sm: 10, md: 30 }, maxWidth: 1300, mx: "auto" }}>
+            <Card elevation={4} sx={{ p: { xs: 1, sm: 2, md: 4 } }}>
+                <Grid container spacing={4} alignItems="stretch">
+                    {/* Formulario */}
+                    <Grid item xs={12} md={4}>
+                        <Card elevation={0} sx={{ boxShadow: "none", height: "100%" }}>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>Formulario de Pedido</Typography>
+                                <OrderForm
+                                    onSubmit={handleSubmit}
+                                    initialValues={editingOrder}
+                                    menus={menus}
+                                    customers={customers}
+                                    motorcycles={motorcycles}
+                                />
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
-                {/* Lista */}
-                <Grid item xs={12} md={6}>
-                    <Card elevation={3} sx={{ maxHeight: '82vh', overflowY: 'auto' }}>
-                        <CardContent>
-                            <Typography variant="h6" gutterBottom>Lista de Pedidos</Typography>
-                            <OrderList
-                                orders={orders}
-                                onEdit={setEditingOrder}
-                                onDelete={handleDelete}
-                            />
-                        </CardContent>
-                    </Card>
+                    {/* Lista */}
+                    <Grid item xs={12} sm={6} md={6}>
+                        <Card elevation={0} sx={{ boxShadow: "none", height: "100%" }}>
+                            <CardContent sx={{ maxHeight: '82vh', overflowY: 'auto' }} className='customers-scrollbar'>
+                                <Typography variant="h6" gutterBottom>Lista de Pedidos</Typography>
+                                <OrderList
+                                    orders={orders}
+                                    onEdit={setEditingOrder}
+                                    onDelete={handleDelete}
+                                />
+                            </CardContent>
+                        </Card>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </Card>
         </Box>
     );
 }

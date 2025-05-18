@@ -1,8 +1,9 @@
-import { Edit, Eye, Trash2, CopyPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { restaurantService } from "../../services/restaurantService";
 import RestaurantsFormValidator from '../../components/Restaurants/RestaurantsFormValidator'
+import { Box, Card, CardContent, Typography, IconButton, Button, Grid, Divider } from "@mui/material";
+import { Edit, Delete, Visibility, Add } from "@mui/icons-material";
 
 const ListRestaurants = () => {
   const [data, setData] = useState([]);
@@ -19,9 +20,8 @@ const ListRestaurants = () => {
   };
 
   const handleView = (id) => {
-    console.log(`Ver registro con ID: ${id}`);
+    Swal.fire("Ver", `Ver registro con ID: ${id}`, "info");
   };
-
 
   const handleCreateNew = () => {
     setShowCreateModal(true);
@@ -41,18 +41,7 @@ const ListRestaurants = () => {
   };
 
   const handleEdit = (restaurant) => {
-    Swal.fire({
-      title: "¿Editar restaurante?",
-      text: "¿Estás seguro de querer editar este registro?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Sí, editar",
-      cancelButtonText: "Cancelar"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setEditingRestaurant(restaurant);
-      }
-    });
+    setEditingRestaurant(restaurant);
   };
 
   const handleUpdate = async (updatedData) => {
@@ -67,10 +56,9 @@ const ListRestaurants = () => {
   };
 
   const handleDelete = async (id) => {
-    console.log(`Intentando eliminar usuario con ID: ${id}`);
     Swal.fire({
       title: "Eliminación",
-      text: "Está seguro de querer eliminar el registro?",
+      text: "¿Está seguro de querer eliminar el registro?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -93,103 +81,130 @@ const ListRestaurants = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-9">
-      <div className="flex flex-col gap-9">
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">
-              Restaurantes disponibles
-            </h3>
-          </div>
-          <div className="flex flex-col gap-5.5 p-6.5">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3">Nombre</th>
-                    <th className="px-6 py-3">Dirección</th>
-                    <th className="px-6 py-3">Teléfono</th>
-                    <th className="px-6 py-3">Correo</th>
-                    <th className="px-6 py-3">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((item) => (
-                    <tr
-                      key={item.id}
-                      className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200"
-                    >
-                      <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{item.name}</td>
-                      <td className="px-6 py-4">{item.address}</td>
-                      <td className="px-6 py-4">{item.phone}</td>
-                      <td className="px-6 py-4">{item.email}</td>
-                      <td className="px-6 py-4 space-x-2">
-                        <button
-                          onClick={() => handleView(item.id ?? 0)}
-                          className="text-blue-600 dark:text-blue-500"
-                        >
-                          <Eye size={20} />
-                        </button>
-                        <button
-                          onClick={() => item.id !== undefined && handleEdit(item)}
-                          className="text-yellow-600 dark:text-yellow-500"
-                        >
-                          <Edit size={20} />
-                        </button>
-                        <button
-                          onClick={() => item.id !== undefined && handleDelete(item.id)}
-                          className="text-red-600 dark:text-red-500"
-                        >
-                          <Trash2 size={20} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    <button
-      onClick={() => handleCreateNew()}
-      className="text-blue-600 dark:text-blue-500"
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        px: { xs: 1, sm: 3, md: 6 },
+        pt: { xs: 20, sm: 10, md: 15 },
+        pb: 4,
+        minHeight: "100vh",
+      }}
     >
-      <CopyPlus  size={40} />
-                        </button>
-      {/* Modal de edición - Debe estar fuera de la tabla pero dentro del return principal */}
-    {editingRestaurant && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-          <div className="p-6">
-            <h3 className="text-lg font-bold mb-4">Editar Restaurante</h3>
+      <Card
+        sx={{
+          width: "100%",
+          maxWidth: 1100,
+          boxShadow: 4,
+          p: { xs: 1, sm: 2, md: 3 },
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          gap: { xs: 4, md: 7 },
+        }}
+      >
+        {/* Formulario */}
+        <Box sx={{ flex: 1, minWidth: 400, maxWidth: "100%" }}>
+          <CardContent sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+            <Typography variant="h6" gutterBottom>
+              {editingRestaurant ? "Editar Restaurante" : "Agregar Restaurante"}
+            </Typography>
             <RestaurantsFormValidator
-              mode={2}
+              mode={editingRestaurant ? 2 : 1}
+              handleCreate={handleCreate}
               handleUpdate={handleUpdate}
               restaurant={editingRestaurant}
               onClose={() => setEditingRestaurant(null)}
             />
-          </div>
-        </div>
-      </div>
-    )}
-    {showCreateModal && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-          <div className="p-6">
-            <h3 className="text-lg font-bold mb-4">Agregar Restaurante</h3>
-            <RestaurantsFormValidator
-              mode={1}
-              handleCreate={handleCreate}            
-              onClose={() => setShowCreateModal(false)}
-            />
-          </div>
-        </div>
-      </div>
-    )}
-    
-    </div>
-    
+          </CardContent>
+        </Box>
+
+        {/* Lista de restaurantes */}
+        <Divider orientation="vertical" flexItem sx={{ display: { xs: "none", md: "block" } }} />
+        <Box sx={{ flex: 2, minWidth: 280 }}>
+          <CardContent sx={{ p: { xs: 1, sm: 2, md: 3 }, flexGrow: 1, display: "flex", flexDirection: "column" }}>
+            <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+              <Typography variant="h6">Restaurantes disponibles</Typography>
+              <Button
+                variant="contained"
+                startIcon={<Add />}
+                onClick={handleCreateNew}
+                sx={{ borderRadius: 2 }}
+              >
+                Nuevo
+              </Button>
+            </Box>
+            <Divider sx={{ mb: 2 }} />
+            <Box
+              sx={{
+                maxHeight: { xs: "45vh", sm: "60vh", md: "70vh" },
+                overflowY: "auto",
+                pr: 1,
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+              }}
+            >
+              {data.length === 0 ? (
+                <Typography color="text.secondary" align="center">
+                  No hay restaurantes registrados.
+                </Typography>
+              ) : (
+                data.map((item) => (
+                  <Card
+                    key={item.id}
+                    variant="outlined"
+                    sx={{
+                      mb: 1,
+                      borderRadius: 2,
+                      boxShadow: 2,
+                      transition: "box-shadow 0.2s",
+                      "&:hover": { boxShadow: 6, borderColor: "primary.light" },
+                      display: "flex",
+                      alignItems: "center",
+                      px: 2,
+                      py: 1,
+                    }}
+                  >
+                    <Grid container alignItems="center">
+                      <Grid item xs={12} sm={5} md={4}>
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          {item.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {item.address}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={4} md={4}>
+                        <Typography variant="body2" color="text.secondary">
+                          {item.phone}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {item.email}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={3} md={4}>
+                        <Box sx={{ display: "flex", gap: 1, justifyContent: { xs: "flex-start", md: "flex-end" }, mt: { xs: 1, md: 0 } }}>
+                          <IconButton color="info" onClick={() => handleView(item.id)}>
+                            <Visibility />
+                          </IconButton>
+                          <IconButton color="warning" onClick={() => handleEdit(item)}>
+                            <Edit />
+                          </IconButton>
+                          <IconButton color="error" onClick={() => handleDelete(item.id)}>
+                            <Delete />
+                          </IconButton>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </Card>
+                ))
+              )}
+            </Box>
+          </CardContent>
+        </Box>
+      </Card>
+    </Box>
   );
 };
 

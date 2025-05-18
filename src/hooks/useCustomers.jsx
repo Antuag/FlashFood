@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getCustomers, deleteCustomer, updateCustomer } from "../services/customerService";
+import Swal from "sweetalert2";
 
 export function useCustomers(loggedUser, setCustomer) {
     const [customers, setCustomers] = useState([]);
@@ -13,8 +14,22 @@ export function useCustomers(loggedUser, setCustomer) {
     }, [loggedUser]);
 
     const handleDelete = async (id) => {
-        await deleteCustomer(id);
-        setCustomers(customers.filter(c => c.id !== id));
+        const result = await Swal.fire({
+            title: "¿Estás seguro?",
+            text: "¡No podrás revertir esto!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        });
+
+        if (result.isConfirmed) {
+            await deleteCustomer(id);
+            setCustomers(customers.filter(c => c.id !== id));
+            Swal.fire("Eliminado", "El cliente ha sido eliminado.", "success");
+        }
     };
 
     const handleUpdate = async (id, updateData) => {
@@ -26,6 +41,7 @@ export function useCustomers(loggedUser, setCustomer) {
             setCustomer({ ...updated });
             localStorage.setItem("customer", JSON.stringify(updated));
         }
+        Swal.fire("Actualizado", "Los datos del cliente han sido actualizados.", "success");
     };
 
     const handleEditClick = (customer) => {

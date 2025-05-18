@@ -3,6 +3,7 @@ import { createIssue, updateIssue, uploadPhoto } from '../../services/issueServi
 import {
     Box, TextField, Select, MenuItem, Button, Stack, InputLabel, FormControl
 } from '@mui/material';
+import Swal from 'sweetalert2';
 
 export default function IssueForm({ onIssueSaved, editingIssue }) {
     const [form, setForm] = useState({
@@ -68,9 +69,19 @@ export default function IssueForm({ onIssueSaved, editingIssue }) {
                 image: null,
             });
 
+            // ALERTA DE ÉXITO
+            Swal.fire(
+                editingIssue ? '¡Edición completada!' : '¡Creación completada!',
+                editingIssue
+                    ? 'El inconveniente fue actualizado correctamente.'
+                    : 'El inconveniente fue creado correctamente.',
+                'success'
+            );
+
             onIssueSaved();
         } catch (err) {
             console.error(err);
+            Swal.fire('Error', 'Ocurrió un error al guardar el inconveniente.', 'error');
         }
     };
 

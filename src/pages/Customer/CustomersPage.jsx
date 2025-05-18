@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Typography, Card } from "@mui/material";
-import { useCustomers } from "../hooks/useCustomers";
-import CustomerList from "../components/Customer/CustomerList";
-import CustomerProfile from "../components/Customer/CustomerProfile";
-import EditCustomerForm from "../components/Customer/EditCustomerForm";
-import { useCustomer } from "../context/CustomerContext";
+import { useCustomers } from "../../hooks/useCustomers";
+import CustomerList from "../../components/Customer/CustomerList";
+import CustomerProfile from "../../components/Customer/CustomerProfile";
+import EditCustomerForm from "../../components/Customer/EditCustomerForm";
+import { useCustomer } from "../../context/CustomerContext";
 
 function CustomersPage() {
     const navigate = useNavigate();
@@ -95,7 +95,7 @@ function CustomersPage() {
                     )}
 
                     <Button
-                        onClick={() => navigate("/pedidos")}
+                        onClick={() => navigate("/ordenes")}
                         variant="contained"
                         sx={{
                             mt: 1,

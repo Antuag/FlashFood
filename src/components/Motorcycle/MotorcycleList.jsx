@@ -1,11 +1,30 @@
 import { deleteMotorcycle } from '../../services/motorcycleService';
 import { Card, CardContent, Typography, Button, Grid, Chip, Box } from '@mui/material';
+import Swal from 'sweetalert2';
 
 export default function MotorcycleList({ onEdit, motorcycles, reload }) {
     const handleDelete = async (id) => {
-        if (window.confirm("¿Eliminar esta moto?")) {
+        const result = await Swal.fire({
+            title: '¿Eliminar esta moto?',
+            text: 'Esta acción no se puede deshacer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (result.isConfirmed) {
             await deleteMotorcycle(id);
             reload();
+            Swal.fire({
+                icon: 'success',
+                title: 'Eliminada',
+                text: 'La moto ha sido eliminada.',
+                timer: 1500,
+                showConfirmButton: false
+            });
         }
     };
 

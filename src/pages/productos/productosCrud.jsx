@@ -5,6 +5,18 @@ import {
   updateProduct,
   deleteProduct,
 } from "../../services/productService";
+import {
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Divider,
+} from "@mui/material";
+import Swal from "sweetalert2";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function ProductosCrud() {
   const [products, setProducts] = useState([]);
@@ -40,19 +52,41 @@ export default function ProductosCrud() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formulario.id) {
-      await updateProduct(formulario.id, formulario);
-    } else {
-      await createProduct(formulario);
+    try {
+      if (formulario.id) {
+        await updateProduct(formulario.id, formulario);
+        Swal.fire({
+          icon: "success",
+          title: "Producto actualizado",
+          text: "El producto se actualizó correctamente.",
+          timer: 1000,
+          showConfirmButton: false,
+        });
+      } else {
+        await createProduct(formulario);
+        Swal.fire({
+          icon: "success",
+          title: "Producto creado",
+          text: "El producto se creó correctamente.",
+          timer: 1000,
+          showConfirmButton: false,
+        });
+      }
+      setFormulario({
+        name: "",
+        category: "",
+        price: "",
+        description: "",
+        id: null,
+      });
+      cargarProductos();
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al guardar el producto.",
+      });
     }
-    setFormulario({
-      name: "",
-      category: "",
-      price: "",
-      description: "",
-      id: null,
-    });
-    cargarProductos();
   };
 
   const handleEditar = (producto) => {
@@ -60,148 +94,222 @@ export default function ProductosCrud() {
   };
 
   const handleEliminar = async (id) => {
-    if (window.confirm("¿Eliminar este producto?")) {
-      await deleteProduct(id);
-      cargarProductos();
+    const result = await Swal.fire({
+      title: "¿Eliminar este producto?",
+      text: "Esta acción no se puede deshacer.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+    if (result.isConfirmed) {
+      try {
+        await deleteProduct(id);
+        cargarProductos();
+        Swal.fire({
+          icon: "success",
+          title: "Eliminado",
+          text: "El producto ha sido eliminado.",
+          timer: 1200,
+          showConfirmButton: false,
+        });
+      } catch {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo eliminar el producto.",
+        });
+      }
     }
   };
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-      <h1 style={{ textAlign: "center" }}>Gestión de Productos</h1>
-
-      {/* Formulario */}
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "grid",
-          gap: "0.5rem",
-          maxWidth: "500px",
-          margin: "1rem auto",
-          padding: "1rem",
-          border: "1px solid #ddd",
-          borderRadius: "8px",
-        }}
-      >
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre"
-          value={formulario.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="category"
-          placeholder="Categoría"
-          value={formulario.category}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="price"
-          placeholder="Precio"
-          value={formulario.price}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="description"
-          placeholder="Descripción"
-          value={formulario.description}
-          onChange={handleChange}
-        />
-        <button
-          type="submit"
-          style={{
-            padding: "0.5rem",
-            background: "#333",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-          }}
-        >
-          {formulario.id ? "Actualizar" : "Crear"}
-        </button>
-      </form>
-
-      {/* Filtro de búsqueda */}
-      <input
-        type="text"
-        placeholder="Buscar productos por nombre o categoría"
-        value={busquedaGlobal}
-        onChange={(e) => setBusquedaGlobal(e.target.value)}
-        style={{
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        minHeight: "100vh",
+        px: { xs: 1, sm: 3, md: 6 },
+        pt: { xs: 65, sm: 10, md: 25 },
+        pb: { xs: 4, sm: 6, md: 8 },
+      }}
+    >
+      <Card
+        sx={{
           width: "100%",
-          padding: "0.5rem",
-          margin: "2rem 0",
-          border: "1px solid #ccc",
-          borderRadius: "4px",
-        }}
-      />
-
-      {/* Catálogo en tarjetas */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-          gap: "1rem",
+          maxWidth: 900,
+          p: { xs: 2, sm: 4, md: 5 },
+          borderRadius: 3,
+          boxShadow: 6,
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          gap: { xs: 3, md: 4 },
         }}
       >
-        {productosFiltrados.map((p) => (
-          <div
-            key={p.id}
-            style={{
-              border: "1px solid #eee",
-              borderRadius: "8px",
-              padding: "1rem",
-              boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}
-          >
-            <div>
-              <h3 style={{ margin: "0 0 0.5rem" }}>{p.name}</h3>
-              <p style={{ margin: 0, fontWeight: "bold" }}>{p.category}</p>
-              <p style={{ margin: 0 }}>${p.price}</p>{" "}
-              {/* Precio ahora con mismo estilo */}
-              <p
-                style={{
-                  fontSize: "0.9rem",
-                  color: "#666",
-                  marginTop: "0.5rem",
-                }}
-              >
-                {p.description}
-              </p>
-            </div>
-            <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
-              <button onClick={() => handleEditar(p)} style={botonSimple}>
-                Editar
-              </button>
-              <button
-                onClick={() => handleEliminar(p.id)}
-                style={{ ...botonSimple, background: "#e74c3c" }}
-              >
-                Eliminar
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+        {/* Formulario */}
+        <Box sx={{ flex: 1, minWidth: 260, maxWidth: 350 }}>
+          <CardContent component="form" onSubmit={handleSubmit} sx={{ p: 0 }}>
+            <Typography variant="h6" gutterBottom>
+              {formulario.id ? "Editar producto" : "Crear producto"}
+            </Typography>
+
+            <TextField
+              label="Nombre"
+              name="name"
+              value={formulario.name}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              required
+            />
+            <TextField
+              label="Categoría"
+              name="category"
+              value={formulario.category}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              required
+            />
+            <TextField
+              label="Precio"
+              name="price"
+              value={formulario.price}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              required
+            />
+            <TextField
+              label="Descripción"
+              name="description"
+              value={formulario.description}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+            />
+
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 2 }}
+            >
+              {formulario.id ? "Actualizar" : "Crear"}
+            </Button>
+          </CardContent>
+        </Box>
+
+        {/* Divider vertical en desktop */}
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{
+            display: { xs: "none", md: "block" },
+            mx: 2,
+            my: 0,
+          }}
+        />
+
+        {/* Lista de productos */}
+        <Box sx={{ flex: 2, minWidth: 260 }}>
+          <CardContent sx={{ p: 0 }}>
+            <Typography variant="h6" gutterBottom>
+              Lista de productos
+            </Typography>
+
+            <TextField
+              label="Buscar"
+              value={busquedaGlobal}
+              onChange={(e) => setBusquedaGlobal(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+
+            <Divider sx={{ my: 2 }} />
+
+            <Box
+              sx={{
+                maxHeight: "60vh",
+                overflowY: "auto",
+                display: "grid",
+                gap: 2,
+              }}
+              className="customers-scrollbar"
+            >
+              {productosFiltrados.map((p) => (
+                <Card
+                  key={p.id}
+                  variant="outlined"
+                  sx={{
+                    padding: 2,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <Box sx={{ flex: 1, minWidth: "200px" }}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {p.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {p.category}
+                    </Typography>
+                    <Typography variant="body2">${p.price}</Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ mt: 1 }}
+                      color="text.secondary"
+                    >
+                      {p.description}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<EditIcon />}
+                      color="info"
+                      size= "small"
+                      onClick={() => handleEditar(p)}
+                      sx={{
+                        borderColor: "#1976d2",
+                        color: "#1976d2",
+                        "&:hover": {
+                          backgroundColor: "#e3f2fd",
+                          borderColor: "#1565c0",
+                        },
+                      }}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      startIcon={<DeleteIcon />}
+                      color="error"
+                      size = "small"
+                      onClick={() => handleEliminar(p.id)}
+                      sx={{
+                        borderColor: "#d32f2f",
+                        color: "#d32f2f",
+                        "&:hover": {
+                          backgroundColor: "#ffebee",
+                          borderColor: "#b71c1c",
+                        },
+                      }}
+                    >
+                      Eliminar
+                    </Button>
+                  </Box>
+                </Card>
+              ))}
+            </Box>
+          </CardContent>
+        </Box>
+      </Card>
+    </Box>
   );
 }
-
-const botonSimple = {
-  padding: "0.4rem 0.8rem",
-  background: "#3498db",
-  color: "#fff",
-  border: "none",
-  borderRadius: "4px",
-  cursor: "pointer",
-};

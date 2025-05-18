@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Box, Card } from '@mui/material';
-import MotorcycleForm from '../components/Motorcycle/MotorcycleForm';
-import MotorcycleList from '../components/Motorcycle/MotorcycleList';
-import { getMotorcycles } from '../services/motorcycleService';
+import MotorcycleForm from '../../components/Motorcycle/MotorcycleForm';
+import MotorcycleList from '../../components/Motorcycle/MotorcycleList';
+import { getMotorcycles } from '../../services/motorcycleService';
 
 export default function Motorcycles() {
     const [selectedMoto, setSelectedMoto] = useState(null);
@@ -30,29 +30,29 @@ export default function Motorcycles() {
             display="flex"
             justifyContent="center"
             alignItems="flex-start"
-            pt={{ xs: "100px", sm: "70px", md: "80px" }} // Siempre >= 60px
+            pt={{ xs: 50, sm: "70px", md: 15 }}
             px={{ xs: 1, sm: 0 }}
         >
             <Card
                 sx={{
-                    width: { xs: '100%', sm: 600, md: 900 }, // 100% en xs, responsivo en desktop
-                    p: { xs: 1, sm: 2, md: 4 },
+                    width: { xs: '100%', sm: 600, md: 900 },
+                    p: { xs: 2, sm: 3, md: 5 }, // padding responsive
                     display: 'flex',
                     flexDirection: { xs: 'column', md: 'row' },
-                    gap: 2,
+                    gap: { xs: 3, md: 4 },
                     bgcolor: 'var(--card)',
                     borderRadius: 3,
                     boxShadow: 6,
                 }}
             >
-                {/* Formulario */}
+                {/* Formulario de motocicletas */}
                 <Box
                     flex={1}
                     display="flex"
                     flexDirection="column"
                     alignItems="center"
                     justifyContent="flex-start"
-                    mb={{ xs: 1, md: 0 }}
+                    mb={{ xs: 2, md: 0 }}
                 >
                     <h2 className="text-xl font-bold mb-4">Formulario de motocicletas</h2>
                     <Box width={{ xs: "100%", sm: 400, md: 500 }}>
@@ -64,16 +64,16 @@ export default function Motorcycles() {
                     </Box>
                 </Box>
 
-                {/* Lista de motos con scroll */}
+                {/* Lista de motos */}
                 <Box
                     width={{ xs: "100%", md: "35%" }}
                     minWidth={0}
-                    p={2}
-                    borderRight={{ md: "1px solid var(--border)" }}
-                    borderBottom={{ xs: "1px solid var(--border)", md: "none" }}
-                    className="customers-scrollbar" // <-- agrega esta clase
+                    p={{ xs: 1, sm: 2, md: 3 }} // padding responsive
+                    borderLeft={{ md: "1px solid var(--border)" }}
+                    borderTop={{ xs: "1px solid var(--border)", md: "none" }}
+                    className="customers-scrollbar"
                     sx={{
-                        maxHeight: { xs: 250, md: 500 }, // Ajusta la altura máxima según tu preferencia
+                        maxHeight: { xs: 250, md: 500 },
                         overflowY: 'auto',
                         mb: { xs: 2, md: 0 }
                     }}

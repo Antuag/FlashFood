@@ -1,7 +1,8 @@
-import React from 'react';
+import { React, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { TextField, Button, Grid, Box } from '@mui/material';
+import { TextField, Button, Grid, Box, MenuItem } from '@mui/material';
+import { getOrders } from '../../services/orderService';
 
 const validationSchema = Yup.object({
     order_id: Yup.number().required('Order ID es requerido'),
@@ -13,6 +14,14 @@ const validationSchema = Yup.object({
 });
 
 const AddressForm = ({ initialValues, onSubmit }) => {
+    const [orders, setOrders] = useState([]);
+
+    useEffect(() => {
+        getOrders().then(res => {
+            // Ajusta según cómo venga la data (usa res.data si es necesario)
+            setOrders(res.data || res);
+        });
+    }, []);
     const formik = useFormik({
         initialValues,
         validationSchema,
@@ -25,7 +34,8 @@ const AddressForm = ({ initialValues, onSubmit }) => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField
-                        fullWidth
+                        select
+                        
                         id="order_id"
                         name="order_id"
                         label="ID de Pedido"
@@ -33,8 +43,14 @@ const AddressForm = ({ initialValues, onSubmit }) => {
                         onChange={formik.handleChange}
                         error={formik.touched.order_id && Boolean(formik.errors.order_id)}
                         helperText={formik.touched.order_id && formik.errors.order_id}
-                        size="small"
-                    />
+                        fullWidth size="medium" sx={{ width: 300, mx: "auto" }}
+                    >
+                        {orders.map((order) => (
+                            <MenuItem key={order.id} value={order.id}>
+                                {`${order.id} - ${order.status}`}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField

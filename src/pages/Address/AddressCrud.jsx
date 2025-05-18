@@ -14,7 +14,8 @@ import {
     IconButton,
     Box,
 } from '@mui/material';
-import { Edit, Delete, LocationOn } from '@mui/icons-material';
+import { Edit, Delete } from '@mui/icons-material';
+import Swal from 'sweetalert2';
 
 const AddressCRUD = () => {
     const [addresses, setAddresses] = useState([]);
@@ -33,8 +34,10 @@ const AddressCRUD = () => {
         if (editingAddress) {
             await updateAddress(editingAddress.id, values);
             setEditingAddress(null);
+            Swal.fire('¡Edición completada!', 'La dirección fue actualizada correctamente.', 'success');
         } else {
             await createAddress(values);
+            Swal.fire('¡Creación completada!', 'La dirección fue creada correctamente.', 'success');
         }
         fetchAddresses();
         resetForm();
@@ -43,24 +46,41 @@ const AddressCRUD = () => {
     const handleEdit = async (id) => {
         const res = await getAddressById(id);
         setEditingAddress(res.data);
+        Swal.fire('Modo edición', 'Ahora puedes editar la dirección.', 'info');
     };
 
     const handleDelete = async (id) => {
-        await deleteAddress(id);
-        fetchAddresses();
+        const result = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: '¿Deseas eliminar esta dirección?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+        });
+
+        if (result.isConfirmed) {
+            await deleteAddress(id);
+            fetchAddresses();
+            Swal.fire('Eliminado', 'La dirección ha sido eliminada.', 'success');
+        }
     };
 
     return (
-        <Container maxWidth="md" sx={{ py: 4, pt: {xs:50, md:20 } }}>
+        <Container maxWidth="md" sx={{
+            py: 4, px: { xs: 1, sm: 3, md: 6 },
+            pt: { xs: 60, sm: 10, md: 20 },
+            pb: 4,
+        }}>
             <Paper elevation={4} sx={{ p: { xs: 2, md: 4 }, borderRadius: 3 }}>
                 <Typography
                     variant="h5"
                     gutterBottom
                     align="center"
-                    sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}
+                    sx={{ fontWeight: 'bold', mb: 3 }}
                 >
-                    <LocationOn sx={{ color: 'primary.main', mr: 1 }} />
-                    CRUD de Direcciones
                 </Typography>
 
                 <Box
@@ -90,7 +110,7 @@ const AddressCRUD = () => {
                         />
                     </Box>
 
-                    {/* Lista de Direcciones con scroll */}
+                    {/* Lista de Direcciones */}
                     <Box
                         sx={{
                             flex: 1.5,
@@ -111,23 +131,30 @@ const AddressCRUD = () => {
                             addresses.map((addr) => (
                                 <Box
                                     key={addr.id}
+                                    component={Paper}
+                                    elevation={2}
                                     sx={{
-                                        borderBottom: '1px solid #eee',
-                                        py: 1,
+                                        mb: 2,
+                                        p: 2,
+                                        borderRadius: 2,
                                         display: 'flex',
                                         justifyContent: 'space-between',
                                         alignItems: 'flex-start',
+                                        
                                     }}
                                 >
                                     <Box sx={{ mr: 1, flex: 1 }}>
-                                        <Typography variant="body1" fontWeight="bold">
+                                        <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 0.5 }}>
                                             {addr.street}, {addr.city}, {addr.state}, {addr.postal_code}
                                         </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Info: {addr.additional_info || 'N/A'} | Orden: {addr.order_id}
+                                        <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                                            Info: {addr.additional_info || 'N/A'}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary">
+                                            Orden: {addr.order_id}
                                         </Typography>
                                     </Box>
-                                    <Box sx={{ display: 'flex', gap: 1 }}>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                                         <IconButton onClick={() => handleEdit(addr.id)} size="small" color="primary">
                                             <Edit fontSize="small" />
                                         </IconButton>
@@ -145,4 +172,4 @@ const AddressCRUD = () => {
     );
 }
 
-    export default AddressCRUD;
+export default AddressCRUD;

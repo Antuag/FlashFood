@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaBars, FaTimes, FaUtensils } from "react-icons/fa";
-import "../styles/NavBar.css";
+import "../../styles/NavBar.css";
 
 const NavBar = () => {
     const { pathname } = useLocation();
@@ -10,20 +10,18 @@ const NavBar = () => {
     if (pathname === "/login") return null;
 
     const links = [
-        { to: "/login", label: "Login" },
         { to: "/clientes", label: "Clientes" },
+        { to: "/conductores", label: "Conductores" },
         { to: "/motos", label: "Motos" },
         { to: "/turnos", label: "Turnos" },
+        { to: "/restaurantes", label: "Restaurantes" },
+        { to: "/menus", label: "Menus" },
         { to: "/productos", label: "Productos" },
+        { to: "/ordenes", label: "Pedidos" },
         { to: "/direcciones", label: "Direcciones" },
         { to: "/incovenientes", label: "Incovenientes" },
         { to: "/chat", label: "Chat" },
-        { to: "/restaurantes", label: "Restaurantes" },
-        { to: "/menus", label: "Menus" },
-        { to: "/conductores", label: "Conductores" },
-        { to: "/mapa", label: "Mapa" },
-        { to: "/ordenes", label: "Ordenes" },
-        
+        { to: "/login", label: "Login" },
     ];
 
     return (

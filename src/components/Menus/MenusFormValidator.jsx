@@ -1,5 +1,19 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import {
+  Button,
+  Card,
+  CardContent,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Checkbox,
+  Typography,
+  FormHelperText,
+} from "@mui/material";
 
 const MenusFormValidator = ({
   mode,
@@ -8,8 +22,8 @@ const MenusFormValidator = ({
   menu,
   restaurants = [],
   products = [],
+  onCancel,
 }) => {
-  // Valores iniciales con valores por defecto
   const initialFormValues = {
     restaurant_id: "",
     product_id: "",
@@ -18,7 +32,6 @@ const MenusFormValidator = ({
     ...menu,
   };
 
-  // Función de submit mejorada
   const handleFormSubmit = async (values, { setSubmitting }) => {
     try {
       if (mode === 1 && handleCreate) {
@@ -35,130 +48,114 @@ const MenusFormValidator = ({
 
   return (
     <Formik
+      enableReinitialize={true}
       initialValues={initialFormValues}
       validationSchema={Yup.object({
-        restaurant_id: Yup.string().required("El nombre del restaurante es obligatorio"),
-        product_id: Yup.string().required("El nombre del producto es obligatorio"),
+        restaurant_id: Yup.string().required("El restaurante es obligatorio"),
+        product_id: Yup.string().required("El producto es obligatorio"),
         price: Yup.number().required("El precio es obligatorio"),
-        availability: Yup.boolean().required("Disponibilidad obligatoria"),
+        availability: Yup.boolean(),
       })}
-      onSubmit={handleFormSubmit} // Usamos la función mejorada
+      onSubmit={handleFormSubmit}
     >
-      {({ isSubmitting }) => (
-        <Form className="grid grid-cols-1 gap-4 p-6 bg-white rounded-md shadow-md">
-          {/* Restaurante */}
-          <div>
-            <label
-              htmlFor="restaurant_id"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Restaurante
-            </label>
-            <Field
-              as="select"
-              name="restaurant_id"
-              className="w-full border rounded-md p-2"
-            >
-            <option value="">Seleccione un restaurante</option>
-              {restaurants.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.name}
-                </option>
-              ))}
-            </Field>
-            <ErrorMessage
-              name="restaurant_id"
-              component="p"
-              className="text-red-500 text-sm"
-            />
-          </div>
+      {({ values, handleChange, touched, errors, isSubmitting }) => (
+        <Form>
+          <Card>
+            <CardContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
 
-          {/* Producto */}
-          <div>
-            <label
-              htmlFor="product_id"
-              className="block text-lg font-medium text-gray-700"
-            >
-            Producto
-            </label>
-            <Field
-              as="select"
-              name="product_id"
-              className="w-full border rounded-md p-2"
-            >
-            <option value="">Seleccione un producto</option>
-              {products.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-            ))}
-            </Field>
-            <ErrorMessage
-              name="product_id"
-              component="p"
-              className="text-red-500 text-sm"
-            />
-          </div>
+              {/* Restaurante */}
+              <FormControl fullWidth error={touched.restaurant_id && Boolean(errors.restaurant_id)}>
+                <InputLabel id="restaurant-label">Restaurante</InputLabel>
+                <Select
+                  labelId="restaurant-label"
+                  id="restaurant_id"
+                  name="restaurant_id"
+                  value={values.restaurant_id}
+                  label="Restaurante"
+                  onChange={handleChange}
+                >
+                  <MenuItem value="">Seleccione un restaurante</MenuItem>
+                  {restaurants.map((r) => (
+                    <MenuItem key={r.id} value={r.id}>
+                      {r.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>{touched.restaurant_id && errors.restaurant_id}</FormHelperText>
+              </FormControl>
 
-          {/* Precio */}
-          <div>
-            <label
-              htmlFor="price"
-              className="block text-lg font-medium text-gray-700"
-            >
-            Precio
-            </label>
-            <Field
-              type="number"
-              name="price"
-              className="w-full border rounded-md p-2"
-            />
-           
-            <ErrorMessage
-              name="pice"
-              component="p"
-              className="text-red-500 text-sm"
-            />
-          </div>
+              {/* Producto */}
+              <FormControl fullWidth error={touched.product_id && Boolean(errors.product_id)}>
+                <InputLabel id="product-label">Producto</InputLabel>
+                <Select
+                  labelId="product-label"
+                  id="product_id"
+                  name="product_id"
+                  value={values.product_id}
+                  label="Producto"
+                  onChange={handleChange}
+                >
+                  <MenuItem value="">Seleccione un producto</MenuItem>
+                  {products.map((p) => (
+                    <MenuItem key={p.id} value={p.id}>
+                      {p.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>{touched.product_id && errors.product_id}</FormHelperText>
+              </FormControl>
 
-          {/* Disponibilidad  */}
-          <div>
-            <label
-              htmlFor="availability"
-              className="block text-lg font-medium text-gray-700"
-            >
-              ¿Disponible? 
-            </label>
-            <Field
-              type="checkbox"
-              name="availability"
-              className="form-checkbox w-full border rounded-md p-2"
-              
-            />
+              {/* Precio */}
+              <TextField
+                label="Precio"
+                type="number"
+                name="price"
+                value={values.price}
+                onChange={handleChange}
+                error={touched.price && Boolean(errors.price)}
+                helperText={touched.price && errors.price}
+                fullWidth
+              />
 
-            <ErrorMessage
-              name="availability"
-              component="p"
-              className="text-red-500 text-sm"
-            />
-          </div>
+              {/* Disponibilidad */}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="availability"
+                    checked={values.availability}
+                    onChange={handleChange}
+                    color="primary"
+                  />
+                }
+                label="¿Disponible?"
+              />
 
-          {/* Botón de enviar con estado de loading */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`py-2 px-4 text-white rounded-md ${
-              mode === 1
-                ? "bg-blue-500 hover:bg-blue-600"
-                : "bg-green-500 hover:bg-green-600"
-            } ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            {isSubmitting
-              ? "Procesando..."
-              : mode === 1
-              ? "Agregar"
-              : "Actualizar"}
-          </button>
+              {/* Botón */}
+              <Button
+                type="submit"
+                variant="contained"
+                color={mode === 1 ? "primary" : "success"}
+                disabled={isSubmitting}
+              >
+                {isSubmitting
+                  ? "Procesando..."
+                  : mode === 1
+                    ? "Agregar"
+                    : "Actualizar"}
+              </Button>
+              {mode === 2 && (
+                <Button
+                  type="button"
+                  variant="outlined"
+                  onClick={() => onCancel()}
+                  disabled={isSubmitting}
+                >
+                  Cancelar
+                </Button>
+              )}
+
+            </CardContent>
+          </Card>
         </Form>
       )}
     </Formik>

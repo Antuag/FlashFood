@@ -1,6 +1,36 @@
 import { Card, CardContent, Button, Typography, Stack, Box } from '@mui/material';
+import MapIcon from '@mui/icons-material/Map';
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 export default function OrderList({ orders, onEdit, onDelete }) {
+    const navigate = useNavigate();
+
+    // Nueva función para manejar la eliminación con SweetAlert2
+    const handleDelete = async (id) => {
+        const result = await Swal.fire({
+            title: '¿Eliminar este pedido?',
+            text: 'Esta acción no se puede deshacer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (result.isConfirmed) {
+            await onDelete(id);
+            Swal.fire({
+                icon: 'success',
+                title: 'Eliminado',
+                text: 'El pedido ha sido eliminado.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    };
+
     return (
         <Box p={2}>
             {Array.isArray(orders) && orders.length > 0 ? (
@@ -49,8 +79,23 @@ export default function OrderList({ orders, onEdit, onDelete }) {
                                     <Button variant="outlined" size="small" onClick={() => onEdit(order)}>
                                         Editar
                                     </Button>
-                                    <Button variant="contained" color="error" size="small" onClick={() => onDelete(order.id)}>
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        size="small"
+                                        onClick={() => handleDelete(order.id)}
+                                    >
                                         Eliminar
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        size="small"
+                                        startIcon={<MapIcon />}
+                                        onClick={() => navigate(`/mapa-moto/${order.motorcycle?.license_plate}`)}
+                                        disabled={!order.motorcycle?.license_plate}
+                                    >
+                                        Ver Mapa
                                     </Button>
                                 </Stack>
                             </Stack>

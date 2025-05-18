@@ -1,8 +1,16 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+  import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 const RestaurantsFormValidator = ({ mode, handleCreate, handleUpdate, restaurant }) => {
-  // Valores iniciales con valores por defecto
   const initialFormValues = {
     name: "",
     address: "",
@@ -11,13 +19,14 @@ const RestaurantsFormValidator = ({ mode, handleCreate, handleUpdate, restaurant
     ...restaurant
   };
 
-  // Función de submit mejorada
-  const handleFormSubmit = async (values, { setSubmitting }) => {
+  const handleFormSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       if (mode === 1 && handleCreate) {
         await handleCreate(values);
+        resetForm();
       } else if (mode === 2 && handleUpdate) {
         await handleUpdate(values);
+        resetForm();
       }
     } catch (error) {
       console.error("Error en el formulario:", error);
@@ -27,89 +36,98 @@ const RestaurantsFormValidator = ({ mode, handleCreate, handleUpdate, restaurant
   };
 
   return (
-    <Formik
-      initialValues={initialFormValues}
-      validationSchema={Yup.object({
-        name: Yup.string().required("El nombre es obligatorio"),
-        address: Yup.string().required("La dirección es obligatoria"),
-        phone: Yup.string()
-          .matches(/^\d{10}$/, "El teléfono debe tener 10 dígitos")
-          .required("El teléfono es obligatorio"),
-        email: Yup.string()
-          .email("Email inválido")
-          .required("El email es obligatorio"),
-      })}
-      onSubmit={handleFormSubmit} // Usamos la función mejorada
-    >
-      {({ isSubmitting }) => (
-        <Form className="grid grid-cols-1 gap-4 p-6 bg-white rounded-md shadow-md">
-          {/* Nombre */}
-          <div>
-            <label htmlFor="name" className="block text-lg font-medium text-gray-700">
-              Nombre
-            </label>
-            <Field 
-              type="text" 
-              name="name" 
-              className="w-full border rounded-md p-2" 
-            />
-            <ErrorMessage name="name" component="p" className="text-red-500 text-sm" />
-          </div>
-
-          {/* Dirección */}
-          <div>
-            <label htmlFor="address" className="block text-lg font-medium text-gray-700">
-              Dirección
-            </label>
-            <Field 
-              type="text" 
-              name="address" 
-              className="w-full border rounded-md p-2" 
-            />
-            <ErrorMessage name="address" component="p" className="text-red-500 text-sm" />
-          </div>
-
-          {/* Teléfono */}
-          <div>
-            <label htmlFor="phone" className="block text-lg font-medium text-gray-700">
-              Teléfono
-            </label>
-            <Field 
-              type="text" 
-              name="phone" 
-              className="w-full border rounded-md p-2" 
-            />
-            <ErrorMessage name="phone" component="p" className="text-red-500 text-sm" />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-lg font-medium text-gray-700">
-              Email
-            </label>
-            <Field 
-              type="email" 
-              name="email" 
-              className="w-full border rounded-md p-2" 
-            />
-            <ErrorMessage name="email" component="p" className="text-red-500 text-sm" />
-          </div>
-
-          {/* Botón de enviar con estado de loading */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`py-2 px-4 text-white rounded-md ${
-              mode === 1
-                ? "bg-blue-500 hover:bg-blue-600"
-                : "bg-green-500 hover:bg-green-600"
-            } ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            {isSubmitting ? "Procesando..." : mode === 1 ? "Agregar" : "Actualizar"}
-          </button>
-        </Form>
-      )}
-    </Formik>
+    <Card sx={{ maxWidth: 500, mx: "auto", mt: 3, boxShadow: 3 }}>
+      <CardContent>
+        <Typography variant="h5" align="center" gutterBottom>
+          {mode === 1 ? "Agregar Restaurante" : "Editar Restaurante"}
+        </Typography>
+        <Formik
+          initialValues={initialFormValues}
+          enableReinitialize={true}
+          validationSchema={Yup.object({
+            name: Yup.string().required("El nombre es obligatorio"),
+            address: Yup.string().required("La dirección es obligatoria"),
+            phone: Yup.string()
+              .matches(/^\d{10}$/, "El teléfono debe tener 10 dígitos")
+              .required("El teléfono es obligatorio"),
+            email: Yup.string()
+              .email("Email inválido")
+              .required("El email es obligatorio"),
+          })}
+          onSubmit={handleFormSubmit}
+        >
+          {({ isSubmitting, touched, errors, handleChange, values }) => (
+            <Form>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Field
+                    as={TextField}
+                    name="name"
+                    label="Nombre"
+                    fullWidth
+                    value={values.name}
+                    onChange={handleChange}
+                    error={touched.name && Boolean(errors.name)}
+                    helperText={<ErrorMessage name="name" />}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    as={TextField}
+                    name="address"
+                    label="Dirección"
+                    fullWidth
+                    value={values.address}
+                    onChange={handleChange}
+                    error={touched.address && Boolean(errors.address)}
+                    helperText={<ErrorMessage name="address" />}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    as={TextField}
+                    name="phone"
+                    label="Teléfono"
+                    fullWidth
+                    value={values.phone}
+                    onChange={handleChange}
+                    error={touched.phone && Boolean(errors.phone)}
+                    helperText={<ErrorMessage name="phone" />}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    as={TextField}
+                    name="email"
+                    label="Email"
+                    fullWidth
+                    value={values.email}
+                    onChange={handleChange}
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={<ErrorMessage name="email" />}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color={mode === 1 ? "primary" : "success"}
+                    fullWidth
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting
+                      ? "Procesando..."
+                      : mode === 1
+                      ? "Agregar"
+                      : "Actualizar"}
+                  </Button>
+                </Grid>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -10,11 +10,11 @@ import {
     OAuthProvider
 } from "firebase/auth";
 import { Typography, Box, Paper } from "@mui/material";
-import LoginForm from "../components/LoginForm";
-import { auth, providerGoogle, providerGithub, microsoftProvider } from "../firebase";
-import { syncWithBackend } from "../services/authService";
-import { useCustomer } from "../context/CustomerContext";
-import "../styles/login.css";
+import LoginForm from "../../components/Login/LoginForm";
+import { auth, providerGoogle, providerGithub, microsoftProvider } from "../../firebase";
+import { syncWithBackend } from "../../services/authService";
+import { useCustomer } from "../../context/CustomerContext";
+import "../../styles/login.css";
 
 function LoginPage() {
     const [email, setEmail] = useState("");

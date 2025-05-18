@@ -11,7 +11,7 @@ import {
 import { Formik, Form, Field, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import { createMotorcycle, updateMotorcycle } from '../../services/motorcycleService';
-import toast from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 function generateRandomPlate() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -73,17 +73,33 @@ export default function MotorcycleForm({ selected, clear, reload }) {
         try {
             if (values.id) {
                 await updateMotorcycle(values.id, values);
-                toast.success('Moto actualizada');
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Moto actualizada!',
+                    text: 'La moto se actualizó correctamente.',
+                    timer: 1800,
+                    showConfirmButton: false,
+                });
             } else {
                 await createMotorcycle(values);
-                toast.success('Moto creada');
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Moto creada!',
+                    text: 'La moto se registró correctamente.',
+                    timer: 1800,
+                    showConfirmButton: false,
+                });
             }
             reload();
             clear();
             resetForm();
         } catch (error) {
             console.error('Error guardando moto:', error);
-            toast.error('Error al guardar la moto');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error al guardar la moto',
+            });
         }
     };
 

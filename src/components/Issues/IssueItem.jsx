@@ -5,12 +5,43 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import Swal from 'sweetalert2';
 
 const IssueItem = ({ issue, onEdit, onDelete }) => {
     const imageUrl = issue.photos?.length > 0
         ? getPhotoUrl(issue.photos[0].image_url.replace(/\\/g, '/'))
         : null;
+
+    // Handler para editar con alerta
+    const handleEdit = () => {
+        Swal.fire({
+            title: 'Modo edición',
+            text: 'Ahora puedes editar el inconveniente.',
+            icon: 'info',
+            confirmButtonText: 'Continuar',
+            confirmButtonColor: '#3085d6',
+        }).then(() => {
+            onEdit(issue);
+        });
+    };
+
+    // Handler para eliminar con confirmación
+    const handleDelete = () => {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: '¿Deseas eliminar este inconveniente?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                onDelete(issue.id);
+            }
+        });
+    };
 
     return (
         <Card sx={{ marginBottom: 2 }}>
@@ -34,7 +65,7 @@ const IssueItem = ({ issue, onEdit, onDelete }) => {
                     <Button
                         variant="outlined"
                         startIcon={<EditIcon />}
-                        onClick={() => onEdit(issue)}
+                        onClick={handleEdit}
                     >
                         Editar
                     </Button>
@@ -42,12 +73,11 @@ const IssueItem = ({ issue, onEdit, onDelete }) => {
                         variant="outlined"
                         color="error"
                         startIcon={<DeleteIcon />}
-                        onClick={() => onDelete(issue.id)}
+                        onClick={handleDelete}
                     >
                         Eliminar
                     </Button>
                 </Stack>
-
             </CardContent>
         </Card>
     );
