@@ -30,6 +30,9 @@ function CustomersPage() {
             justifyContent="center"
             alignItems="flex-start"
             pt="200px"
+            sx={{
+                pt:{xs:45, sm:20}
+            }}
         >
             <Card
                 sx={{

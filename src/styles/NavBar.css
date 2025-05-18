@@ -7,11 +7,9 @@
 }
 
 .navbar-container {
-    
-   
-    height: 100%;
     display: flex;
     align-items: center;
+    height: 100%;
     gap: 2rem;
     padding: 0 1rem;
 }
@@ -36,6 +34,9 @@
 
 .navbar-links {
     display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -51,6 +52,71 @@
 
 .navbar-links li a:hover,
 .navbar-links li a.active {
+    background: #ff9800;
+    color: #222;
+    font-weight: bold;
+}
+
+.navbar-dropdown {
+    position: relative;
+}
+
+.navbar-dropdown-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.navbar-dropdown-btn:hover,
+.navbar-dropdown-menu li a.active {
+    background: #ff9800;
+    color: #222;
+    font-weight: bold;
+}
+
+.navbar-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 170px;
+    background: #23232a;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    border-radius: 0 0 8px 8px;
+    z-index: 1001;
+    padding: 0.5rem 0;
+    list-style: none;
+    padding-left: 0;
+}
+
+.navbar-dropdown-menu.show {
+    display: block;
+}
+
+.navbar-dropdown-menu li {
+    width: 100%;
+}
+
+.navbar-dropdown-menu li a {
+    display: block;
+    width: 100%;
+    padding: 8px 18px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 0;
+    background: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.navbar-dropdown-menu li a:hover,
+.navbar-dropdown-menu li a.active {
     background: #ff9800;
     color: #222;
     font-weight: bold;
@@ -86,4 +152,16 @@
     .navbar-toggle {
         display: block;
     }
+
+    .navbar-dropdown-menu {
+        position: static;
+        box-shadow: none;
+        min-width: 0;
+        background: none;
+        padding: 0;
+    }
+    .navbar-dropdown-menu li a {
+        padding-left: 32px;
+    }
 }
+

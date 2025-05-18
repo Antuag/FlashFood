@@ -9,7 +9,7 @@ import {
     GithubAuthProvider,
     OAuthProvider
 } from "firebase/auth";
-import { Typography, Box, Paper } from "@mui/material";
+import { Typography, Box, Paper, Container } from "@mui/material";
 import LoginForm from "../../components/Login/LoginForm";
 import { auth, providerGoogle, providerGithub, microsoftProvider } from "../../firebase";
 import { syncWithBackend } from "../../services/authService";
@@ -24,7 +24,7 @@ function LoginPage() {
     const { setCustomer } = useCustomer();
 
     const handleSubmit = (values) => {
-        const { email, password, name, phone } = values; // Obtienes email y password de Formik
+        const { email, password, name, phone } = values;
 
         if (isRegistering) {
             createUserWithEmailAndPassword(auth, email, password)
@@ -102,32 +102,48 @@ function LoginPage() {
 
     return (
         <Box
+            minHeight="100vh"
             display="flex"
-            justifyContent="center"
             alignItems="center"
-            height="100vh"
+            justifyContent="center"
+            sx={{
+                pt: { xs: 2, sm: 10 },
+                pb: { xs: 2, sm: 1 }
+            }}
 
         >
-            <Paper elevation={6} sx={{ padding: 4, width: 400, borderRadius: 3 }}>
-                <Typography variant="h3" align="center" color="primary" gutterBottom>
-                    Flash Food
-                </Typography>
-                <Typography variant="h6" align="center" gutterBottom>
-                    {isRegistering ? "Sign Up" : "Login"}
-                </Typography>
-                <LoginForm
-                    email={email}
-                    setEmail={setEmail}
-                    password={password}
-                    setPassword={setPassword}
-                    isRegistering={isRegistering}
-                    handleSubmit={handleSubmit} // Ahora pasamos la función `handleSubmit` sin `e`
-                    handleGoogleLogin={handleGoogleLogin}
-                    handleGithubLogin={handleGithubLogin}
-                    handleMicrosoftLogin={handleMicrosoftLogin}
-                    toggleAuthMode={toggleAuthMode}
-                />
-            </Paper>
+            <Container maxWidth="lg">
+                <Paper
+                    elevation={8}
+                    sx={{
+                        p: { xs: 3, sm: 5 },
+                        borderRadius: 4,
+                        mt: 4,
+                        boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+                        maxWidth: 800, // Puedes ajustar este valor
+                        mx: "auto"     // Centra el Paper dentro del Container
+                    }}
+                >
+                    <Typography variant="h3" align="center" color="primary" gutterBottom sx={{ fontWeight: 700 }}>
+                        Flash Food
+                    </Typography>
+                    <Typography variant="h6" align="center" gutterBottom>
+                        {isRegistering ? "Crear cuenta" : "Iniciar sesion"}
+                    </Typography>
+                    <LoginForm
+                        email={email}
+                        setEmail={setEmail}
+                        password={password}
+                        setPassword={setPassword}
+                        isRegistering={isRegistering}
+                        handleSubmit={handleSubmit}
+                        handleGoogleLogin={handleGoogleLogin}
+                        handleGithubLogin={handleGithubLogin}
+                        handleMicrosoftLogin={handleMicrosoftLogin}
+                        toggleAuthMode={toggleAuthMode}
+                    />
+                </Paper>
+            </Container>
         </Box>
     );
 }
