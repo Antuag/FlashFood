@@ -18,6 +18,9 @@ import ListDrivers from './pages/Driver/List';
 import OrdersPage from './pages/Orders/OrdersPage'
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import darkTheme from "./theme"; // Asegúrate que el path sea correcto
+import { NotificationProvider } from "./context/NotificationContext"; // importa el proveedor
+import Graficas from "./pages/Graficos/GraficosPage"
+
 
 function MotoMapPage() {
   const { plate } = useParams()
@@ -29,27 +32,29 @@ function App() {
       <CssBaseline /> {/* Aplica el modo oscuro y normaliza estilos */}
       <div className="App">
         <Router>
-          <CustomerProvider>
-            <NavBar />
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/clientes" element={<CustomersPage />} />
-              <Route path="/motos" element={<MotorcyclePage />} />
-              <Route path="/turnos" element={<ShiftsPage />} />
-              <Route path="/mapa-moto/:plate" element={<MotoMapPage />} />
-              <Route path="/" element={<Navigate to="/login" replace />} />
-              <Route path="/productos" element={<ProductosCrud />} />
-              <Route path="/ordenes" element={<OrdersPage />} />
-              <Route path="/direcciones" element={<AddressCRUD />} />
-              <Route path="/incovenientes" element={<IssuePage />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/restaurantes" element={<ListRestaurants />} />
-              <Route path="/menus" element={<ListMenus />} />
-              <Route path="/conductores" element={<ListDrivers />} />
-
-            </Routes>
-            <Toaster position="top-right" />
-          </CustomerProvider>
+          <NotificationProvider>
+            <CustomerProvider>
+              <NavBar />
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/clientes" element={<CustomersPage />} />
+                <Route path="/motos" element={<MotorcyclePage />} />
+                <Route path="/turnos" element={<ShiftsPage />} />
+                <Route path="/mapa-moto/:plate" element={<MotoMapPage />} />
+                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="/productos" element={<ProductosCrud />} />
+                <Route path="/ordenes" element={<OrdersPage />} />
+                <Route path="/direcciones" element={<AddressCRUD />} />
+                <Route path="/incovenientes" element={<IssuePage />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/restaurantes" element={<ListRestaurants />} />
+                <Route path="/menus" element={<ListMenus />} />
+                <Route path="/conductores" element={<ListDrivers />} />
+                <Route path="/graficos" element={<Graficas />} />
+              </Routes>
+              
+            </CustomerProvider>
+          </NotificationProvider>
         </Router>
       </div>
     </ThemeProvider>

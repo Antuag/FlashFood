@@ -6,10 +6,12 @@ import {
 import { getCustomers } from '../../services/customerService';
 import { getMenus } from '../../services/menuService';
 import { getMotorcycles } from '../../services/motorcycleService';
-
+import { getAddresses } from '../../services/addressService';
 import OrderForm from '../../components/Orders/OrderForm';
 import OrderList from '../../components/Orders/OrderList';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNotification } from '../../context/NotificationContext';
 import { Box, Grid, Card, CardContent, Typography, Button } from '@mui/material';
 
 const attachMotorcycle = (orders, motos) =>
@@ -18,12 +20,21 @@ const attachMotorcycle = (orders, motos) =>
         motorcycle: motos.find(m => m.id === o.motorcycle_id) || null
     }));
 
+const attachAddress = (orders, addresses) =>
+    orders.map(o => {
+        const foundAddress = addresses.find(a => a.order_id === o.id);
+        return { ...o, address: foundAddress || null };
+    });
+
+
 export default function OrdersPage() {
+    const { addNotification } = useNotification();
     const [orders, setOrders] = useState([]);
     const [editingOrder, setEditingOrder] = useState(null);
     const [menus, setMenus] = useState([]);
     const [customers, setCustomers] = useState([]);
     const [motorcycles, setMotorcycles] = useState([]);
+    const [addresses, setAddresses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -35,31 +46,30 @@ export default function OrdersPage() {
         try {
             setLoading(true);
             setError(null);
-            
-            const [ordersRes, menusRes, customersRes, motorcyclesRes] = await Promise.all([
+
+            const [ordersRes, menusRes, customersRes, motorcyclesRes, addressesRes] = await Promise.all([
                 getOrders(),
                 getMenus(),
                 getCustomers(),
-                getMotorcycles()
+                getMotorcycles(),
+                getAddresses()
             ]);
-            
-            // Depuración de las respuestas
-            console.log('API Responses:');
-            console.log('Orders:', ordersRes);
-            console.log('Menus:', menusRes);
-            console.log('Customers:', customersRes);
-            console.log('Motorcycles:', motorcyclesRes);
-            
-            // Verificar que las respuestas tengan la propiedad data
+
             const ordersData = ordersRes.data || [];
             const menusData = menusRes.data || [];
-            const customersData = customersRes || [];//ira sin data ya que la estrucutra que envia el service no me deja usarlo de esa manera
+            const customersData = customersRes || [];
             const motorcyclesData = motorcyclesRes.data || [];
-            
-            setOrders(attachMotorcycle(ordersData, motorcyclesData));
+            const addressesData = addressesRes.data || [];
+
+            // Adjuntar motos y direcciones a los pedidos
+            const ordersWithMotorcycles = attachMotorcycle(ordersData, motorcyclesData);
+            const ordersWithAddresses = attachAddress(ordersWithMotorcycles, addressesData);
+
+            setOrders(ordersWithAddresses);
             setMenus(menusData);
             setCustomers(customersData);
             setMotorcycles(motorcyclesData);
+            setAddresses(addressesData);
         } catch (err) {
             console.error('Error al cargar datos:', err);
             setError('Error al cargar los datos. Por favor, intenta de nuevo.');
@@ -72,32 +82,31 @@ export default function OrdersPage() {
         try {
             if (editingOrder) {
                 await updateOrder(editingOrder.id, values);
-                Swal.fire({
-                    icon: "success",
-                    title: "Pedido actualizado",
-                    text: "El pedido se actualizó correctamente.",
-                    timer: 1500,
-                    showConfirmButton: false,
+                toast.success('Pedido actualizado');
+                const cliente = customers.find(c => c.id === values.customer_id);
+                addNotification({
+                    tipo: "actualizado",
+                    cliente: cliente?.name || 'Desconocido',
+                    estado: values.status || 'N/A',
+                    fecha: values.created_at,
                 });
             } else {
-                await createOrder(values);
-                Swal.fire({
-                    icon: "success",
-                    title: "Pedido creado",
-                    text: "El pedido se creó correctamente.",
-                    timer: 1500,
-                    showConfirmButton: false,
+                const res = await createOrder(values);
+                console.log('Respuesta createOrder:', res);
+                const cliente = customers.find(c => c.id === values.customer_id);
+                const fecha = res?.data?.created_at || res?.created_at || new Date().toISOString();
+
+                addNotification({
+                    tipo: "nuevo",
+                    cliente: cliente?.name || 'Desconocido',
+                    estado: values.status || 'N/A',
+                    fecha,
                 });
             }
             setEditingOrder(null);
             loadAll();
         } catch (err) {
-            console.error('Error al guardar el pedido:', err);
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "No se pudo guardar el pedido.",
-            });
+            toast.error('Error al guardar el pedido');
         }
     };
 
@@ -168,6 +177,7 @@ export default function OrdersPage() {
                     </Grid>
                 </Grid>
             </Card>
+            <ToastContainer position="top-right" autoClose={3000} />
         </Box>
     );
 }

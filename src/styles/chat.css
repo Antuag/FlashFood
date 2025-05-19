@@ -1,16 +1,15 @@
-/* Avatar del gato */
+/* Avatar del robot */
 .cat-avatar {
   position: relative;
   margin: 0 auto;
   width: 180px;
   height: 180px;
-  background: radial-gradient(circle at 50% 50%, #a57620 0%, #dd8e27 100%);
-  border-radius: 50%;
-  margin-bottom: 20px;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #6c7a89, #95a5a6); /* gris metálico */
+  border-radius: 20px; /* menos redondo */
+  box-shadow: 0 0 20px #00ffea, inset 0 0 10px #00ffea; /* brillo azul eléctrico */
 }
 
-/* Ojos */
+/* Ojos roboticos - cuadrados con borde */
 .cat-eyes {
   position: absolute;
   top: 55px;
@@ -20,110 +19,72 @@
 }
 
 .cat-eye {
-  width: 25px;
-  height: 25px;
-  background-color: white;
-  border-radius: 50%;
+  width: 30px;
+  height: 20px;
+  background-color: #0ff; /* color cian */
+  border-radius: 4px; /* esquinas redondeadas pero cuadradas */
+  box-shadow: 0 0 8px #0ff;
   position: relative;
 }
 
 .pupil {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 10px;
-  height: 10px;
-  background-color: black;
-  border-radius: 50%;
-  transition: transform 0.05s linear;
+  display: none; /* los quitamos porque no queda robot */
 }
 
-
-@keyframes blink {
-  0%, 90%, 100% {
-    transform: scaleY(1);
-  }
-  95% {
-    transform: scaleY(0.1);
-  }
-}
-
-/* Boca animada */
+/* Boca digital */
 #cat-mouth {
   position: absolute;
   bottom: 35px;
   left: 50%;
   transform: translateX(-50%);
-  width: 25px;
+  width: 100px;
   height: 15px;
-  background-color: pink;
-  border-radius: 0 0 50% 50%;
-  animation: mouthIdle 2s infinite;
-  transition: transform 0.3s ease-in-out;
+  background: black;
+  border-radius: 4px;
+  box-shadow: 0 0 15px #0ff inset;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5px;
 }
 
 #cat-mouth.talking {
   animation: mouthTalking 0.4s infinite;
 }
 
-@keyframes mouthIdle {
-  0%, 100% {
-    transform: translateX(-50%) scaleY(1);
-  }
-  50% {
-    transform: translateX(-50%) scaleY(0.9);
-  }
+/* Simular luzes led dentro de la boca */
+#cat-mouth::before,
+#cat-mouth::after,
+#cat-mouth span {
+  content: '';
+  display: block;
+  width: 15px;
+  height: 8px;
+  background: #0ff;
+  border-radius: 2px;
+  box-shadow: 0 0 5px #0ff;
+  animation: blinkLed 1.5s infinite alternate;
+}
+
+#cat-mouth::after {
+  animation-delay: 0.75s;
+}
+
+/* Añadimos un span para un tercer LED */
+#cat-mouth span {
+  animation-delay: 1s;
+}
+
+@keyframes blinkLed {
+  0% {opacity: 1;}
+  100% {opacity: 0.3;}
 }
 
 @keyframes mouthTalking {
   0%, 100% {
-    transform: translateX(-50%) scaleY(1.2);
+    box-shadow: 0 0 15px #0ff inset;
   }
   50% {
-    transform: translateX(-50%) scaleY(0.4);
+    box-shadow: 0 0 25px #00fff0 inset;
   }
 }
-
-
-
-/* Contenedor principal */
-.chat-container {
-  padding: 20px;
-  text-align: center;
-  color: white;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Input y botones */
-input[type="text"] {
-  padding: 10px;
-  width: 300px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: none;
-  outline: none;
-}
-
-button {
-  margin: 10px 5px;
-  padding: 10px 15px;
-  font-size: 14px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background-color: #4caf50;
-  color: white;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-select {
-  margin-top: 10px;
-  padding: 8px;
-  border-radius: 6px;
-  border: none;
-}
-

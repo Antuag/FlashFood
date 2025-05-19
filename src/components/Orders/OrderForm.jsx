@@ -151,10 +151,10 @@ export default function OrderForm({
                     onChange={formik.handleChange}
                     margin="normal"
                 >
-                    <MenuItem value="pending">Pendiente</MenuItem>
-                    <MenuItem value="in_progress">En progreso</MenuItem>
-                    <MenuItem value="delivered">Entregado</MenuItem>
-                    <MenuItem value="cancelled">Cancelado</MenuItem>
+                    <MenuItem value="Pendiente">Pendiente</MenuItem>
+                    <MenuItem value="En progreso">En progreso</MenuItem>
+                    <MenuItem value="Entregado">Entregado</MenuItem>
+                    <MenuItem value="Cancelado">Cancelado</MenuItem>
                 </TextField>
 
                 <Button variant="contained" color="primary" fullWidth type="submit" className="mt-4">

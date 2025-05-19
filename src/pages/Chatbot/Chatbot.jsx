@@ -1,8 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import '../../styles/chat.css';
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Stack,
+  Paper,
+  CircularProgress,
+  Divider,
+} from '@mui/material';
 
 const API_KEY = 'AIzaSyAjCfoERXorGMNWB-Xk375XAU56rbocmj8';
 const BACKEND_URL = 'http://127.0.0.1:5000';
+
+const KNOWLEDGE = `
+🟢 Clientes:
+¡Claro! Para crear o editar un cliente en Flash Food, solo sigue estos pasos:
+1. Ve al panel de clientes desde el menú principal.
+2. Haz clic en el botón "Agregar cliente" o selecciona uno existente para editar.
+3. Ingresa: 🪪 Nombre, 📧 Correo, 📞 Teléfono, 📍 Dirección.
+4. Revisa que todo esté bien escrito y haz clic en Guardar.
+
+🟢 Pedidos:
+1. Ve a la sección de pedidos y haz clic en "Agregar pedido".
+2. Selecciona un cliente, productos o menús, conductor y dirección.
+3. Revisa y guarda.
+
+🟢 Restaurantes:
+1. Ve a la sección de restaurantes.
+2. Haz clic en "Agregar restaurante".
+3. Llena nombre, dirección y teléfono.
+
+🟢 Conductores:
+1. Entra a conductores.
+2. Haz clic en "Agregar conductor".
+3. Ingresa nombre, teléfono, licencia y moto asignada.
+
+🟢 Motos:
+1. Accede al panel de motos.
+2. Haz clic en "Agregar moto".
+3. Llena modelo, placa y año.
+
+🟢 Turnos:
+1. Entra a turnos.
+2. Haz clic en "Agregar turno".
+3. Selecciona día, hora y conductor.
+`;
 
 export default function Chatbot() {
   const [userMessage, setUserMessage] = useState('');
@@ -23,7 +71,6 @@ export default function Chatbot() {
     }
   }, []);
 
-  // Cargar información del backend
   useEffect(() => {
     const endpoints = [
       'restaurants', 'products', 'menus', 'customers', 'orders',
@@ -81,10 +128,12 @@ export default function Chatbot() {
 
     try {
       const prompt = `
-Eres un asistente especializado en la página web Flash Food. Tu trabajo es responder en español preguntas sobre restaurantes, productos, menús, clientes, pedidos, direcciones, motos, conductores, turnos, inconvenientes y fotos.
+Eres un asistente especializado en la página Flash Food. Tu tarea es responder en español preguntas sobre restaurantes, productos, menús, clientes, pedidos, direcciones, motos, conductores, turnos, inconvenientes y fotos.
 
-Aquí tienes la información actual de la base de datos:
+Conocimiento base:
+${KNOWLEDGE}
 
+Información actual del sistema:
 ${backendData}
 
 Pregunta del usuario: ${userMessage}
@@ -122,35 +171,126 @@ Respuesta del asistente:
   };
 
   return (
-    <div className="chat-container">
-      <h2>Asistente Flash Food</h2>
+    <Box
+      className="chat-container"
+      sx={{
+        maxWidth: 500,
+        mx: 'auto',
+        mt: 15,
+        p: 3,
+        borderRadius: 3,
+        boxShadow: 4,
+        bgcolor: 'background.paper',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Typography variant="h5" fontWeight={700} gutterBottom>
+        Asistente Flash Food
+      </Typography>
 
-      <div className="cat-avatar">
+      <Box className="cat-avatar" sx={{ mb: 2 }}>
         <div className="cat-eyes">
           <div className="cat-eye"><div className="pupil"></div></div>
           <div className="cat-eye"><div className="pupil"></div></div>
         </div>
         <div id="cat-mouth"></div>
-      </div>
+      </Box>
 
-      <div>
-        <input
-          type="text"
+      <Paper
+        elevation={2}
+        className='customers-scrollbar'
+        sx={{
+          width: '100%',
+          minHeight: 180,
+          maxHeight: 260,
+          overflowY: 'auto',
+          mb: 2,
+          mt: 4,
+          p: 2,
+          bgcolor: '#23272f', // Fondo oscuro
+          color: '#fff',      // Letra blanca
+        }}
+      >
+        {chat.length === 0 ? (
+          <Typography color="grey.400" align="center">
+            ¡Hola! ¿En qué puedo ayudarte hoy?
+          </Typography>
+        ) : (
+          chat.map((msg, idx) => (
+            <Box
+              key={idx}
+              sx={{
+                mb: 1.5,
+                display: 'flex',
+                flexDirection: msg.sender === 'user' ? 'row-reverse' : 'row',
+                alignItems: 'flex-start',
+              }}
+            >
+              <Paper
+                sx={{
+                  p: 1.2,
+                  bgcolor: msg.sender === 'user' ? 'primary.main' : '#343a40', // Fondo diferente para usuario y bot
+                  color: '#fff',
+                  borderRadius: 2,
+                  maxWidth: '80%',
+                  minWidth: 80,
+                }}
+              >
+                <Typography variant="body2" sx={{ whiteSpace: 'pre-line', color: '#fff' }}>
+                  {msg.text}
+                </Typography>
+              </Paper>
+            </Box>
+          ))
+        )}
+        {loading && (
+          <Box display="flex" justifyContent="center" mt={2}>
+            <CircularProgress size={24} color="inherit" />
+          </Box>
+        )}
+      </Paper>
+
+      <Stack direction="row" spacing={1} width="100%" alignItems="center" mb={1}>
+        <TextField
+          fullWidth
+          size="small"
           placeholder="Escribe tu mensaje..."
           value={userMessage}
           onChange={(e) => setUserMessage(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
         />
-        <br />
-        <button onClick={handleSend} disabled={loading}>Hablar</button>
-        <button onClick={stopSpeech}>Detener</button>
-        <br />
-        <select onChange={(e) => setSelectedVoice(e.target.value)} value={selectedVoice}>
-          <option value="">Selecciona una voz</option>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSend}
+          disabled={loading || !userMessage.trim()}
+        >
+          Hablar
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={stopSpeech}
+        >
+          Detener
+        </Button>
+      </Stack>
+
+      <FormControl fullWidth size="small" sx={{ mt: 1 }}>
+        <InputLabel>Selecciona una voz</InputLabel>
+        <Select
+          value={selectedVoice}
+          label="Selecciona una voz"
+          onChange={(e) => setSelectedVoice(e.target.value)}
+        >
+          <MenuItem value="">Predeterminada</MenuItem>
           {voices.map((v, i) => (
-            <option key={i} value={v.name}>{v.name}</option>
+            <MenuItem key={i} value={v.name}>{v.name}</MenuItem>
           ))}
-        </select>
-      </div>
-    </div>
+        </Select>
+      </FormControl>
+    </Box>
   );
 }
