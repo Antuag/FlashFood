@@ -1,8 +1,12 @@
-import Swal from 'sweetalert2';
-import { deleteShift } from '../../services/ShiftService';
 import {
-    Card, CardContent, Typography, Button, Grid, Box
+    Box,
+    Button,
+    Card, CardContent,
+    Grid,
+    Typography
 } from '@mui/material';
+import Swal from 'sweetalert2';
+import { deleteShift } from '../../services/shiftService';
 
 export default function ShiftList({ shifts, onEdit, reload }) {
     const handleDelete = async (id) => {
