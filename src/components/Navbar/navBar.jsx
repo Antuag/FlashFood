@@ -1,7 +1,10 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { FaBars, FaTimes, FaUtensils, FaChevronDown, FaRobot, FaSignOutAlt } from "react-icons/fa";
+import { FaBars, FaTimes, FaUtensils, FaChevronDown, FaRobot, FaSignOutAlt, FaBell } from "react-icons/fa";
 import "../../styles/NavBar.css";
+import { useCustomer } from "../../context/CustomerContext";
+import Avatar from "@mui/material/Avatar";
+import NotificationBell from "../../pages/Notificaciones/NotificationBell";
 
 const NavBar = () => {
     const { pathname } = useLocation();
@@ -10,6 +13,9 @@ const NavBar = () => {
     const [openRepartidor, setOpenRepartidor] = useState(false);
     const [openGestion, setOpenGestion] = useState(false);
     const [openTienda, setOpenTienda] = useState(false);
+    const { customer } = useCustomer();
+
+    
 
     if (pathname === "/login") return null;
 
@@ -78,6 +84,9 @@ const NavBar = () => {
                             <li>
                                 <Link to="/direcciones" className={pathname === "/direcciones" ? "active" : ""} onClick={() => { setOpen(false); setOpenGestion(false); }}>Direcciones</Link>
                             </li>
+                            <li>
+                                <Link to="/graficos" className={pathname === "/graficos" ? "active" : ""} onClick={() => { setOpen(false); setOpenGestion(false); }}>Graficas</Link>
+                            </li>
                         </ul>
                     </li>
                     {/* Tienda */}
@@ -124,6 +133,24 @@ const NavBar = () => {
                 </ul>
                 {/* Logout al final */}
                 <div style={{ display: "flex", alignItems: "center", marginLeft: "auto" }}>
+                    {/* Campana de notificaciones */}
+                   <NotificationBell />
+                    {customer && (
+                        <Avatar
+                            src={customer.photo || ""}
+                            alt={customer.name || "avatar"}
+                            sx={{
+                                width: 36,
+                                height: 36,
+                                marginRight: 1,
+                                bgcolor: "#ff9800",
+                                fontWeight: 700,
+                                fontSize: 18,
+                            }}
+                        >
+                            {(!customer.photo && customer.name) ? customer.name[0].toUpperCase() : ""}
+                        </Avatar>
+                    )}
                     <button
                         className="navbar-dropdown-btn"
                         style={{

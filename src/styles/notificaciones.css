@@ -1,0 +1,67 @@
+.notificaciones-container {
+  max-width: 500px;
+  margin: 0 auto;
+  background: #313030;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-family: sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.notificaciones-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notificacion-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.producto {
+  font-weight: bold;
+}
+
+.precio {
+  color: green;
+}
+
+.tiempo {
+  color: #666;
+  font-size: 0.85em;
+}
+
+.notificacion-flotante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #333;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 1000;
+  animation: aparecer 0.3s ease-in-out;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
