@@ -1,7 +1,6 @@
 import "../src/styles/App.css";
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { CustomerProvider } from "./context/CustomerContext";
-import { Toaster } from "react-hot-toast";
 import Login from "./pages/Login/LoginPage";
 import CustomersPage from "./pages/Customer/CustomersPage";
 import MotorcyclePage from "./pages/Motorcycle/MotorcyclePage";
@@ -20,6 +19,7 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import darkTheme from "./theme"; // Asegúrate que el path sea correcto
 import { NotificationProvider } from "./context/NotificationContext"; // importa el proveedor
 import Graficas from "./pages/Graficos/GraficosPage"
+import PhotoPage from "./pages/Photos/PhotoPage"
 
 
 function MotoMapPage() {
@@ -51,6 +51,7 @@ function App() {
                 <Route path="/menus" element={<ListMenus />} />
                 <Route path="/conductores" element={<ListDrivers />} />
                 <Route path="/graficos" element={<Graficas />} />
+                <Route path="/fotos" element={<PhotoPage/>} />
               </Routes>
               
             </CustomerProvider>

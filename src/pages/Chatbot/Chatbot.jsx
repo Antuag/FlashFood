@@ -176,7 +176,8 @@ Respuesta del asistente:
       sx={{
         maxWidth: 500,
         mx: 'auto',
-        mt: 15,
+        mt: 20,
+        mb: 3,
         p: 3,
         borderRadius: 3,
         boxShadow: 4,

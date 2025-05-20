@@ -13,7 +13,7 @@ export default function IssuePage() {
     };
 
     return (
-    <Box sx={{ flex: 1, minWidth: '300px', position: 'sticky', top: '4rem', pt: {xs:50, md:7 } }}>
+    <Box mx="center" sx={{ flex: 1, minWidth: '300px', position: 'sticky', top: '4rem', pt: {xs:60, md:15, sm:15 } }}>
         <Card elevation={3}>
             <CardContent>
                 <Box sx={{ display: 'flex', gap: '2rem', flexWrap: 'wrap'  }}>

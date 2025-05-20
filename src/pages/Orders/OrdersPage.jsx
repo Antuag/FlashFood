@@ -143,11 +143,11 @@ export default function OrdersPage() {
     }
 
     return (
-        <Box sx={{ flexGrow: 1, p: { xs: 5, sm: 2, md: 10 }, pt: { xs: 90, sm: 10, md: 30 }, maxWidth: 1300, mx: "auto" }}>
+        <Box sx={{ flexGrow: 1, p: { xs: 5, sm: 2, md: 10 }, pt: { xs: 90, sm: 15, md: 35 }, pb:{xs: 5, sm: 3, md: 5}, maxWidth: 1200, mx: "auto", minHeight: "100vh", overflowY: "auto",       }}>
             <Card elevation={4} sx={{ p: { xs: 1, sm: 2, md: 4 } }}>
                 <Grid container spacing={4} alignItems="stretch">
                     {/* Formulario */}
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={4} mx={"auto"}>
                         <Card elevation={0} sx={{ boxShadow: "none", height: "100%" }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>Formulario de Pedido</Typography>
@@ -163,7 +163,7 @@ export default function OrdersPage() {
                     </Grid>
 
                     {/* Lista */}
-                    <Grid item xs={12} sm={6} md={6}>
+                    <Grid item xs={12} sm={6} md={6} mx={"auto"}>
                         <Card elevation={0} sx={{ boxShadow: "none", height: "100%" }}>
                             <CardContent sx={{ maxHeight: '82vh', overflowY: 'auto' }} className='customers-scrollbar'>
                                 <Typography variant="h6" gutterBottom>Lista de Pedidos</Typography>

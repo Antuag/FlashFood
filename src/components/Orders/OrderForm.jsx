@@ -6,10 +6,10 @@ import Swal from 'sweetalert2';
 export default function OrderForm({
     onSubmit,
     initialValues,
-    menus = [],        // ← Fallbacks: si la prop viene undefined será []
+    menus = [],
     customers = [],
     motorcycles = [],
-    onSuccess // <-- nueva prop opcional
+    onSuccess
 }) {
 
     const formik = useFormik({
@@ -18,16 +18,15 @@ export default function OrderForm({
             menu_id: '',
             motorcycle_id: '',
             quantity: 1,
-            status: 'pending'
+            status: ''
         },
         validationSchema: Yup.object({
             customer_id: Yup.number().required('Cliente requerido'),
             menu_id: Yup.number().required('Menú requerido'),
-            motorcycle_id: Yup.number(),
-            quantity: Yup.number().min(1).required('Cantidad requerida'),
-            status: Yup.string().required()
+            motorcycle_id: Yup.number().required('Debe escoger una moto'),
+            quantity: Yup.number().min(1, 'La cantidad debe ser al menos 1').required('Cantidad requerida'),
+            status: Yup.string().required('Seleccione un estado')
         }),
-        // —— convierte "" a null para motorcycle_id antes de enviar ——
         onSubmit: async (values, helpers) => {
             try {
                 await onSubmit({
@@ -54,6 +53,7 @@ export default function OrderForm({
     return (
         <Box sx={{ maxWidth: 340, mx: "auto" }}>
             <form onSubmit={formik.handleSubmit}>
+
                 {/* ─────────── Cliente ─────────── */}
                 <TextField
                     select
@@ -116,6 +116,8 @@ export default function OrderForm({
                     onChange={(e) =>
                         formik.setFieldValue("motorcycle_id", e.target.value === '' ? null : Number(e.target.value))
                     }
+                    error={formik.touched.motorcycle_id && Boolean(formik.errors.motorcycle_id)}
+                    helperText={formik.touched.motorcycle_id && formik.errors.motorcycle_id}
                     margin="normal"
                 >
                     <MenuItem value="">Seleccione una moto</MenuItem>
@@ -138,6 +140,8 @@ export default function OrderForm({
                     type="number"
                     value={formik.values.quantity}
                     onChange={formik.handleChange}
+                    error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+                    helperText={formik.touched.quantity && formik.errors.quantity}
                     margin="normal"
                 />
 
@@ -149,8 +153,11 @@ export default function OrderForm({
                     name="status"
                     value={formik.values.status}
                     onChange={formik.handleChange}
+                    error={formik.touched.status && Boolean(formik.errors.status)}
+                    helperText={formik.touched.status && formik.errors.status}
                     margin="normal"
                 >
+                    <MenuItem value="">Seleccione un estado</MenuItem>
                     <MenuItem value="Pendiente">Pendiente</MenuItem>
                     <MenuItem value="En progreso">En progreso</MenuItem>
                     <MenuItem value="Entregado">Entregado</MenuItem>

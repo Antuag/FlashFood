@@ -92,91 +92,120 @@ const ListDrivers = () => {
     setEditingDriver(null);
   };
 
-  return (
-    <Box sx={{ flexGrow: 1, p: { xs: 1, sm: 2, md: 4 }, pt: { xs: 60, sm: 8, md: 50 }, maxWidth: 1300, mx: "auto" }}>
-      <Grid
-        container
-        spacing={{ xs: 4, md: 4 }}
-        alignItems="flex-start"
-        justifyContent="center"
-      >
-        {/* Formulario */}
-        <Grid item xs={12} md={4}>
-          <Card sx={{ width: "100%", maxWidth: 400, mx: "auto" }}>
-            <CardHeader
-              title={editingDriver ? "Editar Conductor" : "Agregar Conductor"}
-              sx={{ textAlign: "center", pb: 0 }}
-            />
-            <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-              <DriversFormValidator
-                mode={editingDriver ? 2 : 1}
-                handleCreate={handleCreate}
-                handleUpdate={handleUpdate}
-                driver={editingDriver}
-                onCancel={handleCancelEdit}
+return (
+  <Box sx={{ p: { xs: 1, sm: 2, md: 3 }, mt:{ xs:50, md:30, sm:30}, maxWidth: 1200, mx: "auto" }}>
+    <Card elevation={4} sx={{ p: { xs: 1, md: 3 }, borderRadius: 3 }}>
+      <CardHeader
+        title="Gestión de Conductores"
+        sx={{ textAlign: "center", mb: { xs: 1, md: 3 } }}
+      />
+      <CardContent>
+        <Grid
+          container
+          spacing={2}
+          direction={{ xs: "column", md: "row" }}  // apilar en xs, fila en md+
+          justifyContent="space-between"
+          alignItems="flex-start"
+        >
+          {/* Formulario */}
+          <Grid
+            item
+            xs={11}
+            md={6}   // mitad en md+
+            sx={{ mb: { xs: 2, md: 0 }, mx:"auto" }}
+          >
+            <Card variant="outlined" sx={{ height: "100%", p: { xs: 1, md: 2 } }}>
+              <CardHeader
+                title={editingDriver ? "Editar Conductor" : "Agregar Conductor"}
+                sx={{ textAlign: "center", pb: 0, fontSize: { xs: "1rem", md: "1.25rem" } }}
               />
-            </CardContent>
-          </Card>
-        </Grid>
+              <CardContent sx={{ p: { xs: 1, md: 2 } }}>
+                <DriversFormValidator
+                  mode={editingDriver ? 2 : 1}
+                  handleCreate={handleCreate}
+                  handleUpdate={handleUpdate}
+                  driver={editingDriver}
+                  onCancel={handleCancelEdit}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
 
-        {/* Lista de Conductores */}
-        <Grid item xs={12} md={8}>
-          <Card sx={{ width: "100%", mx: "auto" }}>
-            <CardHeader title="Conductores Disponibles" sx={{ textAlign: "center", pb: 0 }} />
-            <CardContent sx={{ p: { xs: 1, sm: 2 } }}>
-              <TableContainer
-                component={Paper}
-                sx={{
-                  maxHeight: 500,
-                  overflowX: "auto",
-                  // Hace scroll horizontal en móvil si la tabla es muy ancha
-                  '@media (max-width:600px)': {
-                    maxWidth: "100vw",
-                    p: 0,
-                  },
-                }}
-              >
-                <Table stickyHeader size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Nombre</TableCell>
-                      <TableCell>Número de Licencia</TableCell>
-                      <TableCell>Teléfono</TableCell>
-                      <TableCell>Correo</TableCell>
-                      <TableCell>Estado</TableCell>
-                      <TableCell align="center">Acciones</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {data.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>{item.name}</TableCell>
-                        <TableCell>{item.license_number}</TableCell>
-                        <TableCell>{item.phone}</TableCell>
-                        <TableCell>{item.email}</TableCell>
-                        <TableCell>{item.status}</TableCell>
-                        <TableCell align="center">
-                          <IconButton onClick={() => handleView(item.id)}>
-                            <Eye size={20} />
-                          </IconButton>
-                          <IconButton onClick={() => handleEdit(item)}>
-                            <Edit size={20} />
-                          </IconButton>
-                          <IconButton onClick={() => handleDelete(item.id)}>
-                            <Trash2 size={20} />
-                          </IconButton>
+          {/* Lista de Conductores */}
+          <Grid
+            item
+            xs={12}
+            md={6}  // mitad en md+
+          >
+            <Card variant="outlined" sx={{ p: { xs: 1, md: 2 } }}>
+              <CardHeader
+                title="Conductores Disponibles"
+                sx={{ textAlign: "center", pb: 0, fontSize: { xs: "1rem", md: "1.25rem" } }}
+              />
+              <CardContent sx={{ p: 0 }}>
+                <TableContainer
+                  component={Paper}
+                  sx={{
+                    maxHeight: 450,
+                    overflowX: "auto",
+                  }}
+                >
+                  <Table stickyHeader size="small" aria-label="lista de conductores">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ py: 0.5, px: 1 }}>Nombre</TableCell>
+                        <TableCell sx={{ py: 0.5, px: 1 }}>Número Licencia</TableCell>
+                        <TableCell sx={{ py: 0.5, px: 1 }}>Teléfono</TableCell>
+                        <TableCell sx={{ py: 0.5, px: 1 }}>Correo</TableCell>
+                        <TableCell sx={{ py: 0.5, px: 1 }}>Estado</TableCell>
+                        <TableCell align="center" sx={{ py: 0.5, px: 1, minWidth: 90 }}>
+                          Acciones
                         </TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
+                    </TableHead>
+                    <TableBody>
+                      {data.map((item) => (
+                        <TableRow key={item.id} hover>
+                          <TableCell sx={{ py: 0.5, px: 1 }}>{item.name}</TableCell>
+                          <TableCell sx={{ py: 0.5, px: 1 }}>{item.license_number}</TableCell>
+                          <TableCell sx={{ py: 0.5, px: 1 }}>{item.phone}</TableCell>
+                          <TableCell sx={{ py: 0.5, px: 1 }}>{item.email}</TableCell>
+                          <TableCell sx={{ py: 0.5, px: 1 }}>{item.status}</TableCell>
+                          <TableCell align="center" sx={{ py: 0.5, px: 1 }}>
+                            {/* Botón Vista eliminado */}
+                            <IconButton
+                              size="small"
+                              onClick={() => handleEdit(item)}
+                              aria-label="editar"
+                              sx={{ mx: 0.2 }}
+                            >
+                              <Edit size={18} />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleDelete(item.id)}
+                              aria-label="eliminar"
+                              sx={{ mx: 0.2 }}
+                            >
+                              <Trash2 size={18} />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
-  );
+      </CardContent>
+    </Card>
+  </Box>
+);
+
+
+
 };
 
 export default ListDrivers;

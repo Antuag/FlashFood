@@ -8,6 +8,10 @@ import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useState } from 'react';
+import { Button } from '@mui/material';
+import MapIcon from '@mui/icons-material/Map';
+import { useNavigate } from 'react-router-dom';
+
 
 function getStatusColor(status) {
   switch (status) {
@@ -32,6 +36,7 @@ function getStatusIcon(status) {
 export default function NotificationBell() {
   const { notifications, clearNotifications } = useNotification();
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
   const handleOpen = (e) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
@@ -94,8 +99,23 @@ export default function NotificationBell() {
                               {n.fecha}
                             </Typography>
                           )}
+                          {n.license_plate && (
+                            <Button
+                              variant="text"
+                              size="small"
+                              startIcon={<MapIcon />}
+                              onClick={() => {
+                                handleClose(); // para cerrar el menú antes de navegar
+                                navigate(`/mapa-moto/${n.license_plate}`);
+                              }}
+                              sx={{ mt: 1, ml: -1 }}
+                            >
+                              Mapa
+                            </Button>
+                          )}
                         </>
                       }
+
                     />
                   </ListItem>
                   {i < notifications.length - 1 && <Divider component="li" />}

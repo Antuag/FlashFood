@@ -60,6 +60,9 @@ const NavBar = () => {
                             <li>
                                 <Link to="/incovenientes" className={pathname === "/incovenientes" ? "active" : ""} onClick={() => { setOpen(false); setOpenRepartidor(false); }}>Incovenientes</Link>
                             </li>
+                            <li>
+                                <Link to="/fotos" className={pathname === "/fotos" ? "active" : ""} onClick={() => { setOpen(false); setOpenRepartidor(false); }}>Fotos</Link>
+                            </li>
                         </ul>
                     </li>
                     {/* Gestión */}

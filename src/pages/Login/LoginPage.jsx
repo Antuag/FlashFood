@@ -21,7 +21,7 @@ function LoginPage() {
     const [password, setPassword] = useState("");
     const [isRegistering, setIsRegistering] = useState(false);
     const navigate = useNavigate();
-    const { setCustomer } = useCustomer();
+    const { setCustomer } = useCustomer();  
 
     const handleSubmit = (values) => {
         const { email, password, name, phone } = values;

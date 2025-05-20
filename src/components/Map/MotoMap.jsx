@@ -26,8 +26,8 @@ L.Icon.Default.mergeOptions({
 const customIcon = new L.Icon({
     iconUrl: road,
     iconSize: [25, 25],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -40],
+    iconAnchor: [25, 25],
+    popupAnchor: [12.5, 12.5],
     shadowUrl: markerShadow,
     shadowSize: [41, 41],
     shadowAnchor: [14, 41],
