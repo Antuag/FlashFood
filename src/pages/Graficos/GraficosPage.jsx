@@ -8,26 +8,7 @@ import {
 import { Box, Card, CardContent, Typography, Grid } from "@mui/material";
 
 // Datos para los gráficos de barras de cada grupo
-const barrasData1 = [
-  { name: "Enero", ventas: 2400 },
-  { name: "Febrero", ventas: 1398 },
-  { name: "Marzo", ventas: 9800 },
-  { name: "Abril", ventas: 3908 }
-];
 
-const barrasData2 = [
-  { name: "Enero", ventas: 1500 },
-  { name: "Febrero", ventas: 2900 },
-  { name: "Marzo", ventas: 4300 },
-  { name: "Abril", ventas: 2200 }
-];
-
-const barrasData3 = [
-  { name: "Enero", ventas: 5000 },
-  { name: "Febrero", ventas: 2000 },
-  { name: "Marzo", ventas: 6000 },
-  { name: "Abril", ventas: 7000 }
-];
 
 function App() {
   return (
@@ -46,7 +27,7 @@ function App() {
               </Typography>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                 <GraficoCircular1 />
-                <GraficoBarras1 data={barrasData1} />
+                <GraficoBarras1  />
                 <GraficoSeries1 />
               </Box>
             </Grid>
@@ -58,7 +39,7 @@ function App() {
               </Typography>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                 <GraficoCircular2 />
-                <GraficoBarras2 data={barrasData2} />
+                <GraficoBarras2  />
                 <GraficoSeries2 />
               </Box>
             </Grid>
@@ -70,7 +51,7 @@ function App() {
               </Typography>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                 <GraficoCircular3 />
-                <GraficoBarras3 data={barrasData3} />
+                <GraficoBarras3  />
                 <GraficoSeries3 />
               </Box>
             </Grid>

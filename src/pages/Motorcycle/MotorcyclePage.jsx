@@ -30,7 +30,7 @@ export default function Motorcycles() {
             display="flex"
             justifyContent="center"
             alignItems="flex-start"
-            pt={{ xs: 50, sm: "70px", md: 15 }}
+            pt={{ xs: 50, sm: 60, md: 15 }}
             px={{ xs: 1, sm: 0 }}
         >
             <Card
