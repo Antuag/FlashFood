@@ -16,6 +16,7 @@ export const getCustomerByEmail = async (email, token) => {
     return customers.find(c => c.email === email);
 };
 
+
 // Crear un cliente
 export const createCustomer = (data, token) =>
     axios.post(API, data, {

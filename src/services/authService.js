@@ -1,14 +1,14 @@
 import { getCustomerByEmail, createCustomer } from "./customerService";
-import { auth } from "../firebase"; // Asegúrate de tener esta referencia
-
+import { auth } from "../firebase";
 
 export const syncWithBackend = async (user, setCustomer, navigate) => {
     try {
         const token = await auth.currentUser.getIdToken();
-        const photoURL = user.photoURL;
-        const name = user.displayName || "Usuario";
+
+        const photoURL = user.photoURL || "https://i.pravatar.cc/300"; // Imagen genérica
+        const name = user.displayName || "Usuario"; // Nombre genérico
         const email = user.email;
-        const phone = user.phoneNumber || "";
+        const phone = user.phoneNumber || "0000000000"; // Número genérico
 
         const baseInfo = {
             name: name,
@@ -18,7 +18,7 @@ export const syncWithBackend = async (user, setCustomer, navigate) => {
             token: token,
         };
 
-        const existingCustomer = await getCustomerByEmail(user.email, token);
+        const existingCustomer = await getCustomerByEmail(email, token);
 
         if (existingCustomer) {
             const updatedCustomer = { ...existingCustomer, photo: photoURL, token };
@@ -32,10 +32,11 @@ export const syncWithBackend = async (user, setCustomer, navigate) => {
             localStorage.setItem("customer", JSON.stringify(newCustomer));
             console.log("Nuevo cliente guardado:", newCustomer);
         }
+        
 
         navigate("/clientes");
-
     } catch (error) {
         console.error("Error sincronizando con el backend:", error);
+        alert("Error sincronizando con el backend. Verifica los datos y vuelve a intentar.");
     }
 };

@@ -31,17 +31,15 @@ function LoginPage() {
                 .then((userCredential) => {
                     alert("Registration successful!");
                     const userWithExtras = {
-                        uid: userCredential.user.uid,
+                        id: userCredential.user.uid,
                         email: userCredential.user.email,
                         name: name,
                         phone: phone,
                         photo: userCredential.user.photoURL,
                     };
-                    // Guardar en localStorage
-                    localStorage.setItem("user", JSON.stringify(userWithExtras));
-                    // Guardar en contexto
-                    setCustomer(userWithExtras);
+                    
                     syncWithBackend(userWithExtras, setCustomer, navigate);
+                    
                 })
                 .catch((error) => {
                     alert("Error during registration: " + error.message);
