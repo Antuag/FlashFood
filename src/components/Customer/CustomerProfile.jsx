@@ -6,7 +6,7 @@ const CustomerProfile = () => {
     const { customer } = useCustomer();
 
     useEffect(() => {
-        console.log("Datos del cliente en el perfil:", customer);
+        // console.log("Datos del cliente en el perfil:", customer);
     }, [customer]);
 
     if (!customer) return <div>Cargando perfil...</div>;
