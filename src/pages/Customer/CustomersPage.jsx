@@ -3,7 +3,7 @@ import { Box, Button, Typography, Card } from "@mui/material";
 import { useCustomers } from "../../hooks/useCustomers";
 import CustomerList from "../../components/Customer/CustomerList";
 import CustomerProfile from "../../components/Customer/CustomerProfile";
-import EditCustomerForm from "../../components/Customer/EditCustomerForm";
+
 import { useCustomer } from "../../context/CustomerContext";
 
 function CustomersPage() {
@@ -12,9 +12,6 @@ function CustomersPage() {
 
     const {
         customers,
-        editingCustomerId,
-        editFormData,
-        setEditingCustomerId,
         handleDelete,
         handleUpdate,
         handleEditClick,
@@ -31,7 +28,7 @@ function CustomersPage() {
             alignItems="flex-start"
             pt="200px"
             sx={{
-                pt:{xs:45, sm:20}
+                pt: { xs: 45, sm: 20 }
             }}
         >
             <Card
@@ -47,7 +44,7 @@ function CustomersPage() {
                 }}
             >
                 {/* Lista de clientes */}
-                
+
                 <Box
                     width={{ xs: "100%", md: "30%" }}
                     minWidth={0}
@@ -87,15 +84,10 @@ function CustomersPage() {
                         Mi Perfil
                     </Typography>
 
-                    <CustomerProfile user={loggedUser} />
-
-                    {loggedUser && editingCustomerId === loggedUser.id && (
-                        <EditCustomerForm
-                            formData={editFormData}
-                            onSave={(newValues) => handleUpdate(loggedUser.id, newValues)}
-                            onCancel={() => setEditingCustomerId(null)}
-                        />
-                    )}
+                    <CustomerProfile
+                        user={loggedUser}
+                        onUpdate={(newValues) => handleUpdate(loggedUser.id, newValues)}
+                    />
 
                     <Button
                         onClick={() => navigate("/ordenes")}

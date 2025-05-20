@@ -12,10 +12,34 @@ import {
   Stack,
   Paper,
   CircularProgress,
-  Divider,
 } from '@mui/material';
 
-const API_KEY = 'AIzaSyAjCfoERXorGMNWB-Xk375XAU56rbocmj8';
+// --- FUNCIÓN DE LIMPIEZA MEJORADA ---
+function limpiarTextoRespuesta(texto) {
+  let textoLimpio = texto;
+
+  // 1. Eliminar asteriscos de formato (Markdown para negritas, cursivas).
+  // Busca **texto** o *texto* y lo reemplaza solo por texto.
+  textoLimpio = textoLimpio.replace(/\*\*(.*?)\*\*/g, '$1'); // Para negritas
+  textoLimpio = textoLimpio.replace(/\*(.*?)\*/g, '$1');   // Para cursivas
+
+  // 2. Eliminar saltos de línea y espacios múltiples, dejando solo un espacio.
+  textoLimpio = textoLimpio.replace(/[\r\n]+/g, ' '); // Reemplaza uno o más saltos de línea por un espacio
+  textoLimpio = textoLimpio.replace(/\s\s+/g, ' '); // Reemplaza múltiples espacios por uno solo
+
+  // 3. Eliminar emojis (patrón Unicode).
+  // La 'u' flag es para Unicode y 'g' para todas las ocurrencias.
+  textoLimpio = textoLimpio.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}\u{2B50}\u{2B55}\u{2934}-\u{2935}\u{2B05}-\u{2B07}\u{2B1B}-\u{2B1C}\u{3297}\u{3299}\u{303D}\u{00A9}\u{00AE}\u{2122}\u{2328}\u{23EA}-\u{23EC}\u{2B05}\u{2B06}\u{2B07}\u{25AA}\u{25AB}\u{25FB}\u{25FC}\u{25FD}\u{25FE}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}]/gu, '');
+
+
+  // 4. Limpiar espacios al inicio y al final.
+  textoLimpio = textoLimpio.trim();
+
+  return textoLimpio;
+}
+// --- FIN FUNCIÓN DE LIMPIEZA ---
+
+const API_KEY = 'AIzaSyAjCfoERXorGMNWB-Xk375XAU56rbocmj8'; // ¡ATENCIÓN! Proteger tu API Key es crucial en un entorno de producción.
 const BACKEND_URL = 'http://127.0.0.1:5000';
 
 const KNOWLEDGE = `
@@ -50,6 +74,24 @@ const KNOWLEDGE = `
 1. Entra a turnos.
 2. Haz clic en "Agregar turno".
 3. Selecciona día, hora y conductor.
+
+🟡 Inconvenientes:
+1. Ve a la sección de "Inconvenientes" en el panel lateral.
+2. Haz clic en "Agregar inconveniente".
+3. Selecciona el pedido relacionado y describe el problema.
+4. Guarda los cambios. El sistema notificará automáticamente al administrador.
+
+🟡 Fotos:
+1. Ve a la sección "Fotos".
+2. Haz clic en "Subir foto".
+3. Selecciona el pedido o entidad relacionada (como producto o conductor).
+4. Elige la imagen desde tu dispositivo y confirma.
+
+🟡 Ver ubicación de moto:
+1. Entra a la sección "Pedidos".
+2. Busca el pedido deseado y haz clic en el ícono 🗺️ de mapa.
+3. Se abrirá una vista del mapa mostrando la ubicación actual de la moto asignada.
+
 `;
 
 export default function Chatbot() {
@@ -127,18 +169,31 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
+      // --- PROMPT MODIFICADO PARA UN CONTROL MÁS ESTRICTO ---
       const prompt = `
-Eres un asistente especializado en la página Flash Food. Tu tarea es responder en español preguntas sobre restaurantes, productos, menús, clientes, pedidos, direcciones, motos, conductores, turnos, inconvenientes y fotos.
+Eres un asistente inteligente para la plataforma Flash Food.
+Tu objetivo es guiar al usuario sobre cómo realizar acciones en la plataforma, como crear o editar elementos, o cómo usar ciertas funcionalidades.
 
-Conocimiento base:
+**Instrucciones clave para tus respuestas:**
+1.  **Formato:** Responde EXCLUSIVAMENTE con **texto plano**.
+    * NO utilices asteriscos (*), guiones (-), comillas ("), ni ningún otro caracter de formato Markdown.
+    * NO uses emojis. Si los emojis aparecen en la "Base de Conocimiento", ignóralos o descríbelos en texto si es absolutamente necesario (por ejemplo, "el ícono de mapa").
+2.  **Contenido:**
+    * No debes mostrar el contenido literal de la "Información actual del sistema" o "Conocimiento base". Utiliza esta información INTERNAMENTE para formular tu respuesta.
+    * Tu respuesta debe ser una explicación clara y concisa sobre CÓMO hacer algo.
+    * Si la pregunta del usuario es sobre "cómo crear un cliente", tu respuesta debe explicar los pasos para crear un cliente, sin enumerar todos los clientes existentes en el sistema.
+
+**Conocimiento base sobre las funcionalidades de Flash Food:**
 ${KNOWLEDGE}
 
-Información actual del sistema:
+**Información actual del sistema (solo para tu contexto, NO la uses en tu respuesta):**
 ${backendData}
 
+---
 Pregunta del usuario: ${userMessage}
-Respuesta del asistente:
-      `;
+Respuesta del asistente (solo texto plano, siguiendo las instrucciones de formato y contenido):
+`;
+
 
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
@@ -152,10 +207,14 @@ Respuesta del asistente:
       );
 
       const data = await response.json();
-      const botReply = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No pude entender tu mensaje.';
-      setChat((prev) => [...prev, { sender: 'bot', text: botReply }]);
+      let botReply = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No pude entender tu mensaje.';
+      
+      // --- APLICA LA FUNCIÓN DE LIMPIEZA AQUÍ A LA RESPUESTA DE GEMINI ---
+      botReply = limpiarTextoRespuesta(botReply); 
 
-      speak(botReply);
+      setChat((prev) => [...prev, { sender: 'bot', text: botReply }]);
+      speak(botReply); // Envía la respuesta limpia a la síntesis de voz
+
     } catch (error) {
       console.error('Error al comunicarse con Gemini:', error);
       setChat((prev) => [...prev, { sender: 'bot', text: 'Ocurrió un error al responder. Intenta nuevamente.' }]);
@@ -188,7 +247,7 @@ Respuesta del asistente:
       }}
     >
       <Typography variant="h5" fontWeight={700} gutterBottom>
-        Asistente Flash Food
+        GustoBot
       </Typography>
 
       <Box className="cat-avatar" sx={{ mb: 2 }}>
@@ -205,7 +264,7 @@ Respuesta del asistente:
         sx={{
           width: '100%',
           minHeight: 180,
-          maxHeight: 260,
+          maxHeight: 170,
           overflowY: 'auto',
           mb: 2,
           mt: 4,

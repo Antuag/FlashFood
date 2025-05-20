@@ -1,13 +1,11 @@
 import {
     Card,
     Typography,
-    IconButton,
     Box,
     Grid,
     Avatar
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+
 
 const CustomerList = ({ customers, loggedUser, onEdit, onDelete }) => (
     <Box>
@@ -41,16 +39,9 @@ const CustomerList = ({ customers, loggedUser, onEdit, onDelete }) => (
                         <Typography variant="body2" color="text.secondary" align="center">
                             {c.email}
                         </Typography>
-                        {c.id === loggedUser.id && (
-                            <Box mt={1}>
-                                <IconButton onClick={() => onEdit(c)} sx={{ color: "#a0522d" }}>
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton onClick={() => onDelete(c.id)} sx={{ color: "#b22222" }}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Box>
-                        )}
+                        
+                          
+                        
                     </Card>
                 </Grid>
             ))}
