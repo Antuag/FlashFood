@@ -21,7 +21,8 @@ import { NotificationProvider } from "./context/NotificationContext"; // importa
 import Graficas from "./pages/Graficos/GraficosPage"
 import PhotoPage from "./pages/Photos/PhotoPage"
 import ListInfraccion from "./pages/Infracciones/List";
-
+import ListDepartaments from "./pages/Departament/List";
+import ListWorkArea from "./pages/WorkArea/List";
 
 function MotoMapPage() {
   const { plate } = useParams()
@@ -54,6 +55,8 @@ function App() {
                 <Route path="/graficos" element={<Graficas />} />
                 <Route path="/fotos" element={<PhotoPage/>} />
                 <Route path="/infracciones" element={<ListInfraccion />} />
+                <Route path="/departamentos" element={<ListDepartaments />} />
+                <Route path="/workAreas" element={<ListWorkArea />} />
                 {/* Puedes agregar más rutas aquí */}
               </Routes>
               

@@ -189,6 +189,14 @@ return (
                             >
                               <Trash2 size={18} />
                             </IconButton>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleDelete(item.id)}
+                              aria-label="Zona"
+                              sx={{ mx: 0.2 }}
+                            >
+                              <Trash2 size={18} />
+                            </IconButton>
                           </TableCell>
                         </TableRow>
                       ))}
