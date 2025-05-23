@@ -1,19 +1,18 @@
-import axios from 'axios';
+import api from "../interceptor/api";
+const API_URL = '/photos'; // Cambia si es necesario
 
-const API_URL = 'http://localhost:5000'; // Cambia si es necesario
+export const getPhotos = () => api.get(`${API_URL}`);
 
-export const getPhotos = () => axios.get(`${API_URL}/photos`);
-
-export const getPhotoById = (id) => axios.get(`${API_URL}/photos/${id}`);
+export const getPhotoById = (id) => api.get(`${API_URL}/${id}`);
 
 export const uploadPhoto = (formData) =>
-    axios.post(`${API_URL}/photos/upload`, formData, {
+    api.post(`${API_URL}/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
     });
 
 export const updatePhoto = (id, data) =>
-    axios.put(`${API_URL}/photos/${id}`, data);
+    api.put(`${API_URL}/${id}`, data);
 
 export const deletePhoto = (id) =>
-    axios.delete(`${API_URL}/photos/${id}`);
+    api.delete(`${API_URL}/${id}`);
     

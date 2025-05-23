@@ -21,7 +21,6 @@ import { NotificationProvider } from "./context/NotificationContext"; // importa
 import Graficas from "./pages/Graficos/GraficosPage"
 import PhotoPage from "./pages/Photos/PhotoPage"
 
-
 function MotoMapPage() {
   const { plate } = useParams()
   return <MotoMapRealtime plate={plate} />
@@ -29,7 +28,7 @@ function MotoMapPage() {
 function App() {
   return (
     <ThemeProvider theme={darkTheme}>
-      <CssBaseline /> {/* Aplica el modo oscuro y normaliza estilos */}
+      <CssBaseline /> 
       <div className="App">
         <Router>
           <NotificationProvider>
@@ -52,6 +51,7 @@ function App() {
                 <Route path="/conductores" element={<ListDrivers />} />
                 <Route path="/graficos" element={<Graficas />} />
                 <Route path="/fotos" element={<PhotoPage/>} />
+
               </Routes>
               
             </CustomerProvider>

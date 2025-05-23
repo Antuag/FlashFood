@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     Card, Typography, Avatar, Grid, TextField,
     IconButton, Box
@@ -6,6 +7,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
@@ -18,8 +20,9 @@ const validationSchema = Yup.object({
         .length(10, "Mínimo 10 dígitos"),
 });
 
-const CustomerProfile = ({ user, onUpdate }) => {
+const CustomerProfile = ({ user, onUpdate, onDelete }) => {
     const [editMode, setEditMode] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log("Datos del cliente en el perfil:", user);
@@ -96,6 +99,15 @@ const CustomerProfile = ({ user, onUpdate }) => {
                                         </IconButton>
                                         <IconButton onClick={() => setEditMode(false)} sx={{ color: "#d2691e" }}>
                                             <CancelIcon />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={async () => {
+                                                    await onDelete(user);
+                                                    navigate("/login");
+                                            }}
+                                            sx={{ color: "#b22222" }}
+                                        >
+                                            <DeleteIcon />
                                         </IconButton>
                                     </Box>
                                 </Form>

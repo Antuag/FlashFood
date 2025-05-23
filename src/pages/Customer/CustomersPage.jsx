@@ -3,7 +3,6 @@ import { Box, Button, Typography, Card } from "@mui/material";
 import { useCustomers } from "../../hooks/useCustomers";
 import CustomerList from "../../components/Customer/CustomerList";
 import CustomerProfile from "../../components/Customer/CustomerProfile";
-
 import { useCustomer } from "../../context/CustomerContext";
 
 function CustomersPage() {
@@ -87,6 +86,7 @@ function CustomersPage() {
                     <CustomerProfile
                         user={loggedUser}
                         onUpdate={(newValues) => handleUpdate(loggedUser.id, newValues)}
+                        onDelete={() => handleDelete(loggedUser.id)} 
                     />
 
                     <Button
