@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // const API_URL = import.meta.env.VITE_API_URL;
-const API_URL = `https://b0a53f5d-17f8-4c40-8e11-e179bb3f6795.mock.pstmn.io`;
+const API_URL = `https://4021b647-9929-4020-bf2d-5998d613d0b2.mock.pstmn.io`;
 
 
 // Convertimos el servicio para que devuelva la misma estructura que motorcycleService

@@ -1,140 +1,121 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField
-} from "@mui/material";
-import { Form, Formik } from "formik";
-import * as Yup from "yup";
+import React, { useEffect, useState } from "react";
+import { TextField, Button, MenuItem, Box } from "@mui/material";
 
 const InfraccionesFormValidator = ({
   mode,
   handleCreate,
   handleUpdate,
   infracciones,
-  motorcycles = [],
   onCancel,
 }) => {
-  const initialFormValues = {
-    motorcycle_id: infracciones?.motorcycle_id ?? "",
+  const [motorcycles, setMotorcycles] = useState([]);
+  const [form, setForm] = useState({
+    motorcycle_id: "",
     tipo_de_infracción: "",
     fecha: "",
-    ...infracciones,
+  });
+
+  // Función para cargar motos desde backend
+  const fetchMotorcycles = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:5000/motorcycles");
+      if (!response.ok) throw new Error("Error al cargar motos");
+      const data = await response.json();
+      setMotorcycles(data);
+    } catch (error) {
+      console.error(error);
+      // Aquí podrías mostrar mensaje de error en UI si quieres
+    }
   };
 
-  const handleFormSubmit = async (values, { setSubmitting }) => {
-    try {
-      if (mode === 1 && handleCreate) {
-        await handleCreate(values);
-      } else if (mode === 2 && handleUpdate) {
-        await handleUpdate(values);
-      }
-    } catch (error) {
-      console.error("Error en el formulario:", error);
-    } finally {
-      setSubmitting(false);
+  useEffect(() => {
+    fetchMotorcycles();
+  }, []);
+
+  useEffect(() => {
+    if (mode === 2 && infracciones) {
+      setForm({
+        motorcycle_id: infracciones.motorcycle_id || "",
+        tipo_de_infracción: infracciones.tipo_de_infracción || "",
+        fecha: infracciones.fecha ? infracciones.fecha.slice(0, 10) : "",
+      });
+    } else {
+      setForm({
+        motorcycle_id: "",
+        tipo_de_infracción: "",
+        fecha: "",
+      });
+    }
+  }, [mode, infracciones]);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (mode === 1) {
+      handleCreate(form);
+    } else if (mode === 2) {
+      handleUpdate({ ...form, id: infracciones.id });
     }
   };
 
   return (
-    <Formik
-      enableReinitialize={true}
-      initialValues={initialFormValues}
-      validationSchema={Yup.object({
-        motorcycle_id: Yup.string().required("El la motocicleta es obligatorio"),
-        tipo_de_infracción: Yup.string().required("El tipo de infracción es obligatorio"),
-        fecha: Yup.string().required("La fecha es obligatoria"),
-      })}
-      onSubmit={handleFormSubmit}
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}
     >
-      {({ values, handleChange, touched, errors, isSubmitting }) => (
-        <Form>
-          <Card>
-            <CardContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <TextField
+        select
+        label="Moto"
+        name="motorcycle_id"
+        value={form.motorcycle_id}
+        onChange={handleChange}
+        required
+      >
+        {motorcycles.map((moto) => (
+          <MenuItem key={moto.id} value={moto.id}>
+            {moto.license_plate}
+          </MenuItem>
+        ))}
+      </TextField>
 
-              {/* Motocicleta */}
-              <FormControl fullWidth error={touched.motorcycle_id && Boolean(errors.motorcycle_id)}>
-                <InputLabel id="motorcycle-label">Motocicleta</InputLabel>
-                <Select
-                  labelId="motorcycle-label"
-                  id="motorcycle_id"
-                  name="motorcycle_id"
-                  value={values.motorcycle_id}
-                  label="Motocicleta"
-                  onChange={handleChange}
-                >
-                  <MenuItem value="">Seleccione una motocicleta</MenuItem>
-                  {motorcycles.map((r) => (
-                    <MenuItem key={r.id} value={r.id}>
-                      {r.license_plate}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText>{touched.motorcycle_id && errors.motorcycle_id}</FormHelperText>
-              </FormControl>
-                {/* Tipo de infracción */}
-                <TextField  
-                    id="tipo_de_infracción"
-                    name="tipo_de_infracción"
-                    label="Tipo de infracción"
-                    value={values.tipo_de_infracción}
-                    onChange={handleChange}
-                    error={touched.tipo_de_infracción && Boolean(errors.tipo_de_infracción)}
-                    helperText={touched.tipo_de_infracción && errors.tipo_de_infracción}    
-                    fullWidth
-                />                  
-                {/* Fecha */}
-                <TextField
-                  id="fecha"
-                  name="fecha"
-                  label="Fecha"
-                  type="date"
-                  value={values.fecha}
-                  onChange={handleChange}
-                  error={touched.fecha && Boolean(errors.fecha)}
-                  helperText={touched.fecha && errors.fecha}
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                }}
-                />
+      <TextField
+        label="Tipo de infracción"
+        name="tipo_de_infracción"
+        value={form.tipo_de_infracción}
+        onChange={handleChange}
+        required
+      />
 
-              {/* Botón */}
-              <Button
-                type="submit"
-                variant="contained"
-                color={mode === 1 ? "primary" : "success"}
-                disabled={isSubmitting}
-              >
-                {isSubmitting
-                  ? "Procesando..."
-                  : mode === 1
-                    ? "Agregar"
-                    : "Actualizar"}
-              </Button>
-              {mode === 2 && (
-                <Button
-                  type="button"
-                  variant="outlined"
-                  onClick={() => onCancel()}
-                  disabled={isSubmitting}
-                >
-                  Cancelar
-                </Button>
-              )}
+      <TextField
+        label="Fecha"
+        type="date"
+        name="fecha"
+        value={form.fecha}
+        onChange={handleChange}
+        InputLabelProps={{ shrink: true }}
+        required
+      />
 
-            </CardContent>
-          </Card>
-        </Form>
-      )}
-    </Formik>
+      <Box>
+        <Button type="submit" variant="contained" color="primary">
+          {mode === 1 ? "Crear" : "Actualizar"}
+        </Button>
+        {mode === 2 && (
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={onCancel}
+            sx={{ ml: 2 }}
+          >
+            Cancelar
+          </Button>
+        )}
+      </Box>
+    </Box>
   );
 };
 
