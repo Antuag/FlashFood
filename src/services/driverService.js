@@ -1,79 +1,60 @@
-// import { Restaurant } from "../models/restaurant";
+import api from "../interceptor/api"
+const API = `/drivers`;
 
-const API_URL = `http://127.0.0.1:5000/drivers`;
-
-
-// Obtener todos los restaurantes
+// Obtener todos los conductores
 export const getDrivers = async () => {
-    console.log("aqui " + API_URL);
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Error al obtener a los conductores");
-        return await response.json();
+        const response = await api.get(API);
+        return response.data;
     } catch (error) {
         console.error(error);
         return [];
     }
 };
 
-// Obtener un restaurante por ID
+// Obtener un conductor por ID
 export const getDriverById = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/${id}`);
-        if (!response.ok) throw new Error("Conductor no encontrado");
-        return await response.json();
+        const response = await api.get(`${API}/${id}`);
+        return response.data;
     } catch (error) {
         console.error(error);
         return null;
     }
 };
 
-// Crear un nuevo restaurante
+// Crear un nuevo conductor
 export const createDriver = async (driver) => {
     try {
-        const response = await fetch(`${API_URL}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        name: driver.name,
-        license_number: driver.license_number,
-        phone: driver.phone,
-        email: driver.email,
-        status: driver.status
-      })
+        const response = await api.post(API, {
+            name: driver.name,
+            license_number: driver.license_number,
+            phone: driver.phone,
+            email: driver.email,
+            status: driver.status
         });
-        if (!response.ok) throw new Error("Error al crear restaurante");
-        return await response.json();
+        return response.data;
     } catch (error) {
         console.error(error);
         return null;
     }
 };
 
-// Actualizar restaurante
+// Actualizar conductor
 export const updateDriver = async (id, driver) => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(driver),
-        });
-        if (!response.ok) throw new Error("Error al actualizar restaurante");
-        return await response.json();
+        const response = await api.put(`${API}/${id}`, driver);
+        return response.data;
     } catch (error) {
         console.error(error);
         return null;
     }
 };
 
-// Eliminar restaurante
+// Eliminar conductor
 export const deleteDriver = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        if (!response.ok) throw new Error("Error al eliminar restaurante");
+        await api.delete(`${API}/${id}`);
         return true;
     } catch (error) {
         console.error(error);

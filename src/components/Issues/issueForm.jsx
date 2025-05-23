@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -6,8 +6,17 @@ import {
 } from '@mui/material';
 import Swal from 'sweetalert2';
 import { createIssue, updateIssue, uploadPhoto } from '../../services/issueService';
+import { getMotorcycles } from '../../services/motorcycleService';
 
 export default function IssueForm({ onIssueSaved, editingIssue }) {
+    const [motorcycles, setMotorcycles] = useState([]);
+
+    useEffect(() => {
+        getMotorcycles().then(data => {
+            setMotorcycles(Array.isArray(data) ? data : data.data || []);
+        });
+    }, []);
+
     const formik = useFormik({
         initialValues: {
             motorcycle_id: '',
@@ -77,16 +86,33 @@ export default function IssueForm({ onIssueSaved, editingIssue }) {
     return (
         <Box component="form" onSubmit={formik.handleSubmit}>
             <Stack spacing={2}>
-                <TextField
-                    label="ID de la moto"
-                    name="motorcycle_id"
-                    value={formik.values.motorcycle_id}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                <FormControl
+                    fullWidth
                     error={formik.touched.motorcycle_id && Boolean(formik.errors.motorcycle_id)}
-                    helperText={formik.touched.motorcycle_id && formik.errors.motorcycle_id}
                     required
-                />
+                >
+                    <InputLabel id="motorcycle-select-label">Moto</InputLabel>
+                    <Select
+                        labelId="motorcycle-select-label"
+                        name="motorcycle_id"
+                        value={formik.values.motorcycle_id}
+                        label="Motocicleta"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    >
+                        <MenuItem value="" disabled>
+                            <em>Seleccione una moto</em>
+                        </MenuItem>
+                        {motorcycles.map((moto) => (
+                            <MenuItem key={moto.id} value={moto.id}>
+                                {moto.license_plate}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    {formik.touched.motorcycle_id && formik.errors.motorcycle_id && (
+                        <FormHelperText>{formik.errors.motorcycle_id}</FormHelperText>
+                    )}
+                </FormControl>
                 <TextField
                     label="Descripción"
                     name="description"

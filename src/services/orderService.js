@@ -1,9 +1,8 @@
-import axios from 'axios';
+import api from "../interceptor/api"
+const API = '/orders';
 
-const API_URL = 'http://localhost:5000/orders';
-
-export const getOrders = () => axios.get(API_URL);
-export const getOrder = (id) => axios.get(`${API_URL}/${id}`);
-export const createOrder = (order) => axios.post(API_URL, order);
-export const updateOrder = (id, order) => axios.put(`${API_URL}/${id}`, order);
-export const deleteOrder = (id) => axios.delete(`${API_URL}/${id}`);
+export const getOrders = () => api.get(API);
+export const getOrder = (id) => api.get(`${API}/${id}`);
+export const createOrder = (order) => api.post(API, order);
+export const updateOrder = (id, order) => api.put(`${API}/${id}`, order);
+export const deleteOrder = (id) => api.delete(`${API}/${id}`);

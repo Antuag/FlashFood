@@ -1,9 +1,9 @@
-import axios from 'axios';
+import api from "../interceptor/api"
 
-const API_URL = 'http://localhost:5000/addresses';
+const API = '/addresses';
 
-export const getAddresses = () => axios.get(API_URL);
-export const getAddressById = (id) => axios.get(`${API_URL}/${id}`);
-export const createAddress = (data) => axios.post(API_URL, data);
-export const updateAddress = (id, data) => axios.put(`${API_URL}/${id}`, data);
-export const deleteAddress = (id) => axios.delete(`${API_URL}/${id}`);
+export const getAddresses = () => api.get(API);
+export const getAddressById = (id) => api.get(`${API}/${id}`);
+export const createAddress = (data) => api.post(API, data);
+export const updateAddress = (id, data) => api.put(`${API}/${id}`, data);
+export const deleteAddress = (id) => api.delete(`${API}/${id}`);

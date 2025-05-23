@@ -1,44 +1,40 @@
-import axios from "axios";
+import api from "../interceptor/api"
 
-const API = "http://localhost:5000/customers";
+const API = "/customers"; // Ya no necesitas el host, api ya tiene la baseURL
 
 // Obtener todos los clientes
-export const getCustomers = (token) =>
-    axios.get(API, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }).then(res => res.data);
+export const getCustomers = async () => {
+    const res = await api.get(API);
+    return res.data;
+};
 
-// Obtener cliente por email//arreglar funciion dejarla por id
-export const getCustomerByEmail = async (email, token) => {
-    const customers = await getCustomers(token);
+// Obtener cliente por email
+export const getCustomerByEmail = async (email) => {
+    const customers = await getCustomers();
     return customers.find(c => c.email === email);
 };
 
-
 // Crear un cliente
-export const createCustomer = (data, token) =>
-    axios.post(API, data, {
+export const createCustomer = async (data) => {
+    const res = await api.post(API, data, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-    }).then(res => res.data);
-
-// Eliminar un cliente
-export const deleteCustomer = (id, token) =>
-    axios.delete(`${API}/${id}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
         },
     });
+    return res.data;
+};
+
+// Eliminar un cliente
+export const deleteCustomer = async (id) => {
+    return api.delete(`${API}/${id}`);
+};
 
 // Actualizar un cliente
-export const updateCustomer = (id, data, token) =>
-    axios.put(`${API}/${id}`, data, {
+export const updateCustomer = async (id, data) => {
+    const res = await api.put(`${API}/${id}`, data, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
         },
-    }).then(res => res.data);
+    });
+    return res.data;
+};
