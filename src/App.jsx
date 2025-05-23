@@ -20,6 +20,7 @@ import darkTheme from "./theme"; // Asegúrate que el path sea correcto
 import { NotificationProvider } from "./context/NotificationContext"; // importa el proveedor
 import Graficas from "./pages/Graficos/GraficosPage"
 import PhotoPage from "./pages/Photos/PhotoPage"
+import ListInfraccion from "./pages/Infracciones/List";
 
 
 function MotoMapPage() {
@@ -52,6 +53,8 @@ function App() {
                 <Route path="/conductores" element={<ListDrivers />} />
                 <Route path="/graficos" element={<Graficas />} />
                 <Route path="/fotos" element={<PhotoPage/>} />
+                <Route path="/infracciones" element={<ListInfraccion />} />
+                {/* Puedes agregar más rutas aquí */}
               </Routes>
               
             </CustomerProvider>

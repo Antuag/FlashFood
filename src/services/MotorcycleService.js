@@ -7,3 +7,10 @@ export const getMotorcycleById = (id) => axios.get(`${API_URL}/motorcycles/${id}
 export const createMotorcycle = (data) => axios.post(`${API_URL}/motorcycles`, data);
 export const updateMotorcycle = (id, data) => axios.put(`${API_URL}/motorcycles/${id}`, data);
 export const deleteMotorcycle = (id) => axios.delete(`${API_URL}/motorcycles/${id}`);
+export const motorcycleService = {
+    createMotorcycle,
+    deleteMotorcycle,
+    getMotorcycleById,
+    getMotorcycles,
+    updateMotorcycle,
+};
