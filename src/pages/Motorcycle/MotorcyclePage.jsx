@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Card } from '@mui/material';
-import MotorcycleForm from '../../components/Motorcycle/MotorcycleForm';
-import MotorcycleList from '../../components/Motorcycle/MotorcycleList';
+import MotorcycleForm from '../../components/Motorcycle/motorcycleForm';
+import MotorcycleList from '../../components/Motorcycle/motorcycleList';
 import { getMotorcycles } from '../../services/motorcycleService';
 
 export default function Motorcycles() {
