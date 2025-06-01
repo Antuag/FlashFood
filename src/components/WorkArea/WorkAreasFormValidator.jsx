@@ -52,7 +52,7 @@ const WorkAreaFormValidator = ({
       validationSchema={Yup.object({
         driver_id: Yup.string().required("El driver es obligatorio"),
         departament_id: Yup.string().required("El departamento es obligatorio"),
-        data: Yup.string().required("La fecha es obligatoria"),
+        date: Yup.string().required("La fecha es obligatoria"),
       })}
       onSubmit={handleFormSubmit}
     >
@@ -76,7 +76,7 @@ const WorkAreaFormValidator = ({
                   label="driver"
                   onChange={handleChange}
                 >
-                  <MenuItem value="">Seleccione un drivere</MenuItem>
+                  <MenuItem value="">Seleccione un driver</MenuItem>
                   {drivers.map((r) => (
                     <MenuItem key={r.id} value={r.id}>
                       {r.name}

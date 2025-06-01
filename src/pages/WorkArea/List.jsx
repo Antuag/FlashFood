@@ -34,8 +34,8 @@ const ListWorkArea = () => {
         const driversResponse = await driverService.getDrivers();  
         const departamentsResponse = await departamentService.getDepartament();  
         setData(response.data);
-        setDrivers(Array.isArray(driversResponse.data) ? driversResponse.data : []); 
-        setDepartaments(Array.isArray(departamentsResponse.data) ? departamentsResponse.data : []);  
+        setDrivers(Array.isArray(driversResponse) ? driversResponse : []); 
+        setDepartaments(Array.isArray(departamentsResponse) ? departamentsResponse : []);  
     };
   const handleCreate = async (newWorkArea) => {
     try {
@@ -190,7 +190,7 @@ const ListWorkArea = () => {
                               <Typography variant="subtitle1" fontWeight="bold">
                                 Departamento:{" "}
                                 {departaments.find(
-                                  (r) => r.id === item.departamet_id)?.name || "—"}
+                                  (r) => r.id === item.departament_id)?.name || "—"}
                               </Typography>
                               <Typography>Dato: {item.date}</Typography>
                             </Box>
